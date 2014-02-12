@@ -1,0 +1,103 @@
+@import url("pure-min.css");
+@import url("icons.css");
+body {
+  font-size: 15px ;
+  line-height: 1.4em;
+  font-family: 'Raleway', Helvetica, sans-serif;
+  font-weight: 400;
+  background: white;
+  color: slategrey;
+}
+body *{
+  box-sizing:border-box;
+}
+h1, h2, h3, h4, h5{
+  font-weight: 100;
+}
+a {
+  color: #ea4c89 ;
+  text-decoration: none;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+}
+a:hover{
+  border-bottom: 1px solid #ea4c89;
+  cursor: pointer;
+}
+.muted{
+  opacity: 0.5;
+}
+.em{
+  font-style: italic;
+}
+.upper{
+  text-transform: uppercase;
+}
+.thin{
+  font-weight: 100;
+}
+.text-center{
+  text-align: center;
+}
+.text-right{
+  text-align: right;
+}
+.text-left{
+  text-align: right;
+}
+.no-dot-list{
+  list-style: none;
+}
+.container{
+  max-width: 1200px;
+  margin:0 auto;
+}
+.pure-textarea{
+  width: 178px;
+  height: 75px;
+}
+.bench-bar{
+  height: 100vh;
+  background-color: #333;
+  color: #efefef;
+}
+.bench-bar-inner{
+  padding: 20px;
+}
+.new-bench-button{
+  display: block;
+  background-color: #ea4c89;
+  padding: 5px 0 9px 0;
+  text-align: center;
+  border-radius: 3px;
+  color: #fefefe;
+  font-weight: 500;
+}
+.new-bench-button:hover{
+  border: none;
+}
+.new-bench-button span{
+  position: relative;
+  top: 4px;
+  font-weight: 700;
+  margin: 0 10px 0 0;
+  font-size: 1.5em;
+}
+
+.workbench{
+  box-shadow: 0 5px 3px lightgrey;
+  height: 100vh;
+}
+.player-bar{
+  height: 100vh;
+  background-color: #fafafa;
+}
+
+
+@media only screen and (max-width :767px){
+  .title{
+    font-size: 30px;
+  }
+  .leader{
+    font-size: 1.2em;
+  }
+}

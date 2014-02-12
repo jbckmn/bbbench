@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  if user
+    .pure-g-r.container 
+      .pure-u-1-4
+        .bench-bar
+          .bench-bar-inner
+            .bench-header
+              h2.bench-logo bbbench
+              small.bench-tagline Artist Bookmarking
+            a.new-bench-button(href="/new-bench")
+              span.icon-plus3
+              | New Bench
+            each bench in benches
+              .bench-in-list
+                a.bench-link(href="##{bench._id}") #{bench.title}
+      .pure-u-3-8
+        .workbench
+      .pure-u-3-8
+        .player-bar
+    script.
+      var bbbench = bbbench || {}; bbbench.benches = !{JSON.stringify(benches)};
+  else
+    include nonUserIndex

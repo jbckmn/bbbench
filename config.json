@@ -1,0 +1,32 @@
+{
+  "name": "bbbench",
+  "status": {
+    "500": {
+      "code": 500,
+      "message": "This is embarassing. Something went wrong!"
+    },
+    "404": {
+      "code":404,
+      "message":"Nothing found by that identifier. Life is hard."
+    },
+    "403": {
+      "code": 403,
+      "message": "Not allowed. You can't always get what you want."
+    },
+    "400": {
+      "code":400,
+      "message":"We don't understand what you mean. Speak slowly."
+    }
+  },
+  "twitter":{
+    "consumer_key": "6oPTRUpYvaYUuFnmJj8CJQ",
+    "consumer_secret": "MLga17ZRMuNnAYK9NszrVnewofI5k5offCAPygCa50",
+    "callbackURL":"http://www.bbbench.com/auth/twitter/callback"
+  },
+  "mongo":{
+    "url":"mongodb://localhost/bbbench"
+  },
+  "mailgun":{
+    "key":"key-5n1bqp873lh8yritf-uiogsvgn120fa4"
+  }
+}

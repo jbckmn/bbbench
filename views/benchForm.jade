@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  .container.pure-g-r
+    .pure-u-1-2.pull-center
+      p#about
+      form#bench-form(action="#{type == 'new' ? '/new-bench' : '/bench/' + bench._id + '/edit'}", method="post").pure-form.pure-form-aligned
+        legend#bench-legend
+          if bench.name
+            | Editing #{bench.name}
+          else 
+            | Build your bench
+        fieldset#bench-fields
+          .pure-control-group
+            label(for="title") Title
+            input(type="text", name="title", placeholder="First Draft", autofocus="autofocus")
+          .pure-control-group
+            label(for="description") Description
+            textarea.pure-textarea(name="description", placeholder="My favorites...")
+          .pure-control-group
+            label(for="openPublic") Publicly visible
+            if bench.openPublic || !bench.title
+              input(type="checkbox", name="openPublic", checked)
+            else
+              input(type="checkbox", name="openPublic")
+          .pure-controls
+            input(type="submit", value="Submit")
