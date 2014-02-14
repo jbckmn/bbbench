@@ -3,10 +3,10 @@
 body {
   font-size: 15px ;
   line-height: 1.4em;
-  font-family: 'Raleway', Helvetica, sans-serif;
-  font-weight: 400;
+  font-family: 'Open Sans', Helvetica, sans-serif;
+  font-weight: 600;
   background: white;
-  color: slategrey;
+  color: #333;
 }
 body *{
   box-sizing:border-box;
@@ -63,6 +63,17 @@ a:hover{
 .bench-bar-inner{
   padding: 20px;
 }
+.bench-header{
+  margin-bottom: 1em;
+}
+.bench-logo{
+  margin:0;
+  font-weight: 700;
+}
+.bench-tagline{
+  opacity: 0.6;
+  font-weight: 700;
+}
 .new-bench-button{
   display: block;
   background-color: #ea4c89;
@@ -70,7 +81,7 @@ a:hover{
   text-align: center;
   border-radius: 3px;
   color: #fefefe;
-  font-weight: 500;
+  margin-bottom: 15px;
 }
 .new-bench-button:hover{
   border: none;
@@ -82,14 +93,214 @@ a:hover{
   margin: 0 10px 0 0;
   font-size: 1.5em;
 }
+.bench-heading{
+  text-transform: uppercase;
+  opacity: 0.3;
+  font-size: 0.7em;
+  font-weight: 700;
+}
+.bench-list{
+
+}
+.bench-in-list{
+
+}
+.bench-link{
+  color: #fefefe;
+  opacity: 0.6;
+}
+.bench-link.active{
+  color: #fefefe;
+  opacity: 1;
+}
 
 .workbench{
   box-shadow: 0 5px 3px lightgrey;
   height: 100vh;
 }
+.work-heading, .player-heading{
+  font-weight: 700;
+  margin: 20px 0 15px 15px;
+  font-size: 17px;
+}
+.work-actions, .player-actions{
+  text-align: right;
+  margin: 20px 15px 15px 0;
+}
+.share-work{
+  color: #333;
+  font-size: 0.6em;
+  background-color: #ddd;
+  opacity: 0.6;
+  padding: 5px 10px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  position: relative;
+  top:-8px;
+  margin-right: 3px;
+}
+.share-work:hover, .close-work:hover{
+  border: none;
+}
+.close-work:hover{
+  color: #ea4c89;
+}
+.close-work{
+  color: #333;
+  font-weight: 700;
+  font-size: 1.5em;
+}
+.work-sort, .player-sort{
+  border-bottom: 2px solid #eee;
+  margin: 0 15px 0;
+  text-align: right;
+}
+.work-sorter, .player-sorter{
+  font-size: 0.65em;
+  font-weight: 700;
+  color: #333;
+  opacity: 0.5;
+  margin: 0 4px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 5px;
+}
+.work-sorter.active, .player-sorter.active{
+  color: #333;
+  opacity: 1;
+  border-bottom-color: #333;
+}
+
 .player-bar{
   height: 100vh;
   background-color: #fafafa;
+}
+.player-actions{
+  margin-bottom: 25px;
+}
+.player-type-link{
+  font-size: 0.9em;
+}
+.player-type-link.active{
+  color: #333;
+  font-weight: 700;
+}
+.player-type-link.active:hover{
+  cursor: default;
+  border: none;
+}
+
+.player-list, .work-list{
+  margin: 15px;
+}
+
+.player{
+  background-color: white;
+  border: 1px solid #f1f1f1;
+  border-radius: 6px;
+  padding: 8px;
+  line-height: 0;
+  margin: 10px 0;
+}
+.player:hover{
+  cursor: move;
+}
+.player-pic{
+  display: inline-block;
+  cursor: move;
+  margin-right: 10px;
+}
+.player-img{
+  width: 65px;
+  height: 65px;
+  border-radius: 5px;
+}
+.player-basics{
+  display: inline-block;
+  height: 65px;
+  line-height: 1em;
+  vertical-align: top;
+}
+.player-basics .lead{
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 3px;
+}
+.player-basics .detail{
+  font-size: 0.7em;
+  opacity: 0.6;
+}
+.player-basics .detail span{
+  font-size: 1.5em;
+  position: relative;
+  top:3px;
+  margin-left:-3px;
+}
+.player-followers-count{
+  display: inline-block;
+  height: 65px;
+  text-align: right;
+  line-height: 1em;
+  vertical-align: top;
+  float: right;
+}
+.player-followers-count .lead{
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 3px;
+}
+.player-followers-count .detail{
+  font-size: 0.7em;
+  opacity: 0.6;
+}
+.player-basics .buttons{
+  margin-top: 6px;
+}
+.player-followers-count .buttons{
+  margin-top: 10px;
+}
+.player-basics .buttons a:hover{
+  border: none;
+}
+.player-followers-count .buttons a:hover{
+  border: none;
+}
+.player-basics .dribbble-link{
+  color: white;
+  background-color: #ea4c89;
+  border-radius: 2px;
+  padding: 4px 10px;
+  font-size: 0.7em;
+  opacity:0.6;
+  font-weight: 700;
+}
+.player-basics .twitter-link{
+  color: #333;
+  background-color: #e1e1e1;
+  padding:3px 4px 0px;
+  border-radius: 2px;
+  opacity:0.6;
+  position: relative;
+  top:3px;
+  margin: 0 4px 0 6px;
+}
+.player-basics .mail-link{
+  color: #333;
+  background-color: #e1e1e1;
+  padding:3px 4px 0px;
+  border-radius: 2px;
+  opacity:0.6;
+  position: relative;
+  top:3px;
+}
+.player-followers-count .more-info-button{
+  color: #333;
+  background-color: white;
+  padding:3px 4px 0px;
+  border-radius: 2px;
+  opacity:0.6;
+  position: relative;
+  top:3px;
+  border: 1px solid #ddd;
 }
 
 

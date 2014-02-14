@@ -30,7 +30,7 @@ var Bench = new Schema({
     reboundsReceviedCount: Number,
     name: String,
     captain: Boolean,
-    dribbbleUid: String}],
+    dribbbleId: String}],
   image: {type: String, default: ''},
   openPublic: {type: Boolean, default: true},
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }

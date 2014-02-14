@@ -16,6 +16,7 @@ module.exports = function (app, ensureAuth, io) {
         Bench.find({userId: req.user._id}).lean().exec(function(err, benches) {
           res.render('index', { title: config.name,
                               user: req.user,
+                              req: req,
                               benches: benches,
                               message: req.flash('message'), 
                               error: req.flash('error') });
@@ -27,6 +28,7 @@ module.exports = function (app, ensureAuth, io) {
     } else {
       res.render('index', { title: config.name,
                             user: req.user,
+                            req: req,
                             message: req.flash('message'), 
                             error: req.flash('error') });
     }
@@ -121,6 +123,7 @@ module.exports = function (app, ensureAuth, io) {
   app.get('/settings', ensureAuth, function(req, res) {
     res.render('settings', { title: 'Your settings', 
                             user: req.user, 
+                            req: req,
                             message: req.flash('message'), 
                             error: req.flash('error') });
   });
@@ -184,6 +187,7 @@ module.exports = function (app, ensureAuth, io) {
     res.render('signin', { title: 'Register for '+config.name, 
                           type: 'register',
                           user: req.user, 
+                          req: req,
                           message: req.flash('message'), 
                           error: req.flash('error') });
   });
@@ -207,6 +211,7 @@ module.exports = function (app, ensureAuth, io) {
     res.render('signin', { title: 'Sign In to ' + config.name, 
                             user: req.user, 
                             type: 'signin',
+                            req: req,
                             message: req.flash('message'), 
                             error: req.flash('error') });
   });

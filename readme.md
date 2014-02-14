@@ -1,4 +1,4 @@
-# [BBBench](http://www.bbbench.com)
+# [bbbench](http://www.bbbench.com)
 ---
 
-> Make your best [Dribbble](http://dribbble.com) line-ups.
+> Make your best [dribbble](http://dribbble.com) line-ups.

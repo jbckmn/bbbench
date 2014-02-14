@@ -12,13 +12,46 @@ block content
             a.new-bench-button(href="/new-bench")
               span.icon-plus3
               | New Bench
-            each bench in benches
-              .bench-in-list
-                a.bench-link(href="##{bench._id}") #{bench.title}
+            .bench-heading
+              span Benches 
+            .bench-list
+              each bench in benches
+                .bench-in-list
+                  a.bench-link(href="##{bench._id}", title="#{bench.description}") #{bench.title}
       .pure-u-3-8
         .workbench
+          .pure-g
+            .pure-u-1-2
+              h2.work-heading Select a bench!
+                | (
+                span.work-count 0
+                | )
+            .pure-u-1-2
+              .work-actions
+                a.share-work Share
+                a.close-work
+                  span.icon-cross
+          .work-sort
+            a.work-sorter.sort(data-sort="name") Alphabetically
+            a.work-sorter.sort(data-sort="likes") Most Liked
+            a.work-sorter.sort.active(data-sort="followers") Most Followers
+          .work-list.list
       .pure-u-3-8
         .player-bar
+          .pure-g
+            .pure-u-1-2
+              h2.player-heading Players
+            .pure-u-1-2
+              .player-actions
+                a.player-type-link.active Who I Follow
+                |  | 
+                a.player-type-link Everyone
+          #players-home-list
+            .player-sort
+              a.player-sorter.sort(data-sort="name") Alphabetically
+              a.player-sorter.sort(data-sort="likes") Most Liked
+              a.player-sorter.sort.active(data-sort="followers") Most Followers
+            .player-list.list
     script.
       var bbbench = bbbench || {}; bbbench.benches = !{JSON.stringify(benches)};
   else
