@@ -17,8 +17,8 @@ var Bench = new Schema({
     location: String,
     url: String,
     twitterName: String,
-    benchCount: Number,
     shotsCount: Number,
+    draftedBy: String,
     drafteesCount: Number,
     followersCount: Number,
     followingCount: Number,
@@ -29,6 +29,8 @@ var Bench = new Schema({
     reboundsCount: Number,
     reboundsReceviedCount: Number,
     name: String,
+    websiteUrl: String,
+    benchCount: Number,
     captain: Boolean,
     dribbbleId: String}],
   image: {type: String, default: ''},
@@ -94,8 +96,29 @@ Bench.statics.updateBench = function(id, data, uid, io, cb){
 
 Bench.statics.addPlayers = function(data, io, cb) {
   this.findById(data.bench, function(err, bench) {
+    var madePlayer = {};
     for (var i = data.players.length - 1; i >= 0; i--) {
-      bench.players.push(data.players[i]);
+      madePlayer.name = data.players[i].name;
+      madePlayer.location = data.players[i].location;
+      madePlayer.url = data.players[i].url;
+      madePlayer.dribbbleId = data.players[i].id;
+      madePlayer.followersCount = data.players[i].followers_count;
+      madePlayer.drafteesCount = data.players[i].draftees_count;
+      madePlayer.likesCount = data.players[i].likes_count;
+      madePlayer.likesReceivedCount = data.players[i].likes_received_count;
+      madePlayer.commentsCount = data.players[i].comments_count;
+      madePlayer.commentsReceivedCount = data.players[i].comments_received_count;
+      madePlayer.reboundsCount = data.players[i].rebounds_count;
+      madePlayer.reboundsReceviedCount = data.players[i].rebounds_received_count;
+      madePlayer.image = data.players[i].avatar_url;
+      madePlayer.dribbbleName = data.players[i].username;
+      madePlayer.twitterName = data.players[i].twitter_screen_name;
+      madePlayer.websiteUrl = data.players[i].website_url;
+      madePlayer.draftedBy = data.players[i].drafted_by_player_id;
+      madePlayer.shotsCount = data.players[i].shots_count;
+      madePlayer.followingCount = data.players[i].following_count;
+
+      bench.players.push(madePlayer);
     }
     bench.save(function(err,result){
       if(err){
@@ -118,11 +141,12 @@ Bench.statics.findPlayerBenches = function(data, io, cb) {
       name: data.dribbbleName,
       count: benches.length,
       titles: [],
+      elem: data.elemId,
       requestor: data.requestor
     };
     for (var i = benches.length - 1; i >= 0; i--) {
       benchData.titles.push(benches[i].title);
-    };
+    }
     io.sockets.emit('foundPlayerBenches', benchData);
   });
 };

@@ -59,6 +59,7 @@ a:hover{
   height: 100vh;
   background-color: #333;
   color: #efefef;
+  overflow: scroll;
 }
 .bench-bar-inner{
   padding: 20px;
@@ -68,11 +69,11 @@ a:hover{
 }
 .bench-logo{
   margin:0;
-  font-weight: 700;
+  font-weight: 600;
 }
 .bench-tagline{
   opacity: 0.6;
-  font-weight: 700;
+  font-weight: 600;
 }
 .new-bench-button{
   display: block;
@@ -105,18 +106,23 @@ a:hover{
 .bench-in-list{
 
 }
-.bench-link{
+.bench-link, .settings-link, .signout-link{
   color: #fefefe;
   opacity: 0.6;
+  margin: 2px 0;
+  font-size: 0.9em;
+  display: block;
 }
-.bench-link.active{
+.bench-link.active, .bench-link:hover, .settings-link:hover, .signout-link:hover{
   color: #fefefe;
   opacity: 1;
+  border:none;
 }
 
 .workbench{
   box-shadow: 0 5px 3px lightgrey;
   height: 100vh;
+  overflow: scroll;
 }
 .work-heading, .player-heading{
   font-weight: 700;
@@ -172,6 +178,7 @@ a:hover{
 
 .player-bar{
   height: 100vh;
+  overflow: scroll;
   background-color: #fafafa;
 }
 .player-actions{
@@ -185,29 +192,38 @@ a:hover{
   font-weight: 700;
 }
 .player-type-link.active:hover{
-  cursor: default;
+  cursor: pointer;
   border: none;
 }
 
 .player-list, .work-list{
   margin: 15px;
+  min-height: 60vh;
 }
 
 .player{
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
   background-color: white;
   border: 1px solid #f1f1f1;
   border-radius: 6px;
   padding: 8px;
   line-height: 0;
   margin: 10px 0;
+  -webkit-user-drag: element;
 }
 .player:hover{
   cursor: move;
+}
+.player.no-drag:hover{
+  cursor: default;
 }
 .player-pic{
   display: inline-block;
   cursor: move;
   margin-right: 10px;
+}
+.player.no-drag .player-pic:hover{
+  cursor: default;
 }
 .player-img{
   width: 65px;
@@ -287,6 +303,16 @@ a:hover{
   color: #333;
   background-color: #e1e1e1;
   padding:3px 4px 0px;
+  border-radius: 2px;
+  opacity:0.6;
+  position: relative;
+  top:3px;
+}
+.player-basics .web-link{
+  color: #333;
+  background-color: #e1e1e1;
+  padding:3px 4px 0px;
+  margin-right: 4px;
   border-radius: 2px;
   opacity:0.6;
   position: relative;
