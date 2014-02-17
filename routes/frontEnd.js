@@ -185,7 +185,7 @@ module.exports = function (app, ensureAuth, io) {
   });
 
   app.get('/register', function(req, res) {
-    res.render('signin', { title: 'Register for '+config.name, 
+    res.render('signIn', { title: 'Register for '+config.name, 
                           type: 'register',
                           user: req.user, 
                           req: req,
@@ -209,7 +209,7 @@ module.exports = function (app, ensureAuth, io) {
     });
   });
   app.get('/sign-in', function(req, res) {
-    res.render('signin', { title: 'Sign In to ' + config.name, 
+    res.render('signIn', { title: 'Sign In to ' + config.name, 
                             user: req.user, 
                             type: 'signin',
                             req: req,
