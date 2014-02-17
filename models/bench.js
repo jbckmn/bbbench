@@ -27,7 +27,7 @@ var Bench = new Schema({
     likesCount: Number,
     likesReceivedCount: Number,
     reboundsCount: Number,
-    reboundsReceviedCount: Number,
+    reboundsReceivedCount: Number,
     name: String,
     websiteUrl: String,
     benchCount: Number,
