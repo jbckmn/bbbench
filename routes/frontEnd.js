@@ -16,6 +16,7 @@ module.exports = function (app, ensureAuth, io) {
         Bench.find({userId: req.user._id}).lean().exec(function(err, benches) {
           res.render('index', { title: config.name,
                               user: req.user,
+                              isHome: true,
                               req: req,
                               benches: benches,
                               message: req.flash('message'), 
