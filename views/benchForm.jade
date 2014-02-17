@@ -1,10 +1,14 @@
 extends layout
 
 block content
-  .container.pure-g-r
-    .pure-u-1-2.pull-center
+  .container.pure-g
+    .pure-u-1-4
+      .bench-bar
+        .bench-bar-inner
+          include benchHeader
+    .pure-u-3-8
       p#about
-      form#bench-form(action="#{type == 'new' ? '/new-bench' : '/bench/' + bench._id + '/edit'}", method="post").pure-form.pure-form-aligned
+      form#bench-form(action="#{type == 'new' ? '/new-bench' : '/bench/' + bench._id + '/edit'}", method="post", style="margin:15px;").pure-form.pure-form-aligned
         legend#bench-legend
           if bench.name
             | Editing #{bench.name}
@@ -25,5 +29,4 @@ block content
               input(type="checkbox", name="openPublic")
           .pure-controls
             input(type="submit", value="Submit")
-    .pure-u-1-2
-      a(href="/", title="Home") Home
+    .pure-u-3-8

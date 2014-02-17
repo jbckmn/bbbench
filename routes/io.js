@@ -22,8 +22,8 @@ module.exports = function (app, io) {
       Bench.addPlayers(data, io);
     });
 
-    socket.on('removePlayersFromBench', function (data) {
-      Bench.removePlayers(data, io);
+    socket.on('removePlayerFromBench', function (data) {
+      Bench.removePlayer(data, io);
     });
 
     socket.on('setBenchCaptain', function (data) {

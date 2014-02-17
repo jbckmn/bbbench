@@ -135,6 +135,21 @@ Bench.statics.addPlayers = function(data, io, cb) {
   });
 };
 
+Bench.statics.removePlayer = function(data, io, cb) {
+  this.findOneAndUpdate({_id: data.bench},{$pull: {players: {dribbbleId: data.player.dribbbleId}}}, function(err, result) {
+    if(err){
+      console.log(err);
+      io.sockets.emit('error', {details: err});
+    }
+    if(result){
+      io.sockets.emit('removedPlayersToBench', { requestor: data.requestor, bench: result });
+      if(cb){
+        cb(err, result);
+      }
+    }
+  });
+};
+
 Bench.statics.findPlayerBenches = function(data, io, cb) {
   this.find({'players.dribbbleName': data.dribbbleName}, function (err, benches) {
     var benchData = {

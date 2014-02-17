@@ -4,7 +4,12 @@ html
     title= title
     meta(name="viewport", content="width=device-width, initial-scale=1")
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:300,700,600')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    if req.headers.host == 'localhost:3000'
+      link(rel='stylesheet', href='/stylesheets/pure-min.css')
+      link(rel='stylesheet', href='/stylesheets/icons.css')
+      link(rel='stylesheet', href='/stylesheets/style.css')
+    else
+      link(rel='stylesheet', href='/stylesheets/bbbench.min.css')
     link(rel='icon', href="/images/favicon.png")
     meta(name="description", content="Make your best dribbble line-ups with bbbench.")
     if user
@@ -37,9 +42,12 @@ html
     block content
 
     script(src="/socket.io/socket.io.js")
-    script(src="/javascripts/lodash.js")
-    script(src="/javascripts/lodash-ext.js")
-    script(src="/javascripts/classie.js")
-    script(src="/javascripts/script.js")
-    script(src="/javascripts/user.js")
-    script(src="/javascripts/bench.js")
+    if req.headers.host == 'localhost:3000'
+      script(src="/javascripts/lodash.js")
+      script(src="/javascripts/lodash-ext.js")
+      script(src="/javascripts/classie.js")
+      script(src="/javascripts/script.js")
+      script(src="/javascripts/user.js")
+      script(src="/javascripts/bench.js")
+    else
+      script(src="/javascripts/bbbench.min.js")

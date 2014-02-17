@@ -18,23 +18,77 @@
     playerTemplate = _.template([
       '<div id="<%= elemId %>" class="player<%= draggable ?  \'\' : \' no-drag\'%>" draggable="<%= draggable.toString() %>" data-dribbble-id="<%= dribbbleId %>" data-dribbble-name="<%= username %>">',
         '<span class="likes" style="display:none;"><%= likesReceived %></span>',
-        '<div class="player-pic">',
-          '<img class="player-img" src="<%= image %>" title="<%= name %>" alt="<%= name %>" />',
-        '</div>',
-        '<div class="player-basics">',
-          '<div class="lead name"><%= name %></div>',
-          '<div class="detail"><span class="icon-location"></span> <%= location %></div>',
-          '<div class="buttons">',
-            '<a class="dribbble-link" href="<%= dribbbleUrl %>" target="_blank">Dribbble</a>',
-            '<a class="twitter-link" href="http://twitter.com/<%= twitter %>" target="_blank"><span class="icon-twitter"></span></a>',
-            '<a class="web-link" href="<%= websiteUrl || dribbbleUrl %>" target="_blank"><span class="icon-network"></span></a>',
-            '<a class="mail-link" href="mailto: ?subject=<%= name %>&body=<%= dribbbleUrl %>"><span class="icon-mail"></span></a>',
+        '<div class="player-main">',
+          '<div class="player-pic">',
+            '<img class="player-img" src="<%= image %>" title="<%= name %>" alt="<%= name %>" />',
+          '</div>',
+          '<div class="player-basics">',
+            '<div class="lead name"><%= name %></div>',
+            '<div class="detail"><span class="icon-location"></span> <%= location %></div>',
+            '<div class="buttons">',
+              '<a class="dribbble-link" href="<%= dribbbleUrl %>" target="_blank">Dribbble</a>',
+              '<a class="twitter-link" href="http://twitter.com/<%= twitter %>" target="_blank"><span class="icon-twitter"></span></a>',
+              '<a class="web-link" href="<%= websiteUrl || dribbbleUrl %>" target="_blank"><span class="icon-network"></span></a>',
+              '<a class="mail-link" href="mailto: ?subject=<%= name %>&body=<%= dribbbleUrl %>"><span class="icon-mail"></span></a>',
+            '</div>',
+          '</div>',
+          '<div class="player-followers-count">',
+            '<div class="lead followers"><%= followersCount %></div>',
+            '<div class="detail">Followers</div>',
+            '<div class="buttons">',
+              '<% if (!draggable) { %>',
+                '<a class="remove-button" title="remove <%= name %>" data-elem-id="<%= elemId %>"><span class="icon-cross2"></span></a>',
+              '<% } %>',
+              '<a class="more-info-button" data-elem-id="<%= elemId %>"><span class="icon-arrow-down5"></span></a>',
+            '</div>',
           '</div>',
         '</div>',
-        '<div class="player-followers-count">',
-          '<div class="lead followers"><%= followersCount %></div>',
-          '<div class="detail">Followers</div>',
-          '<div class="buttons"><a class="more-info-button"><span class="icon-arrow-right5"></span></a></div>',
+        '<div class="player-card">',
+          '<div class="player-card-bill text-center" style="display:none;">',
+            '<h3 class="player-card-name"><%= name %></h3>',
+            '<h5 class="player-card-occupation"><span class="icon-location"></span> <%= location %></h5>',
+          '</div>',
+          '<table class="player-card-table pure-table">',
+            '<caption>Major League Record</caption>',
+            '<thead>',
+              '<tr>',
+                '<th>Shots</th>',
+                '<th>Followers</th>',
+                '<th>Likes rec.</th>',
+                '<th>Rebounds rec.</th>',
+                '<th>Comments rec.</th>',
+              '</tr>',
+            '</thead>',
+            '<tbody>',
+              '<tr>',
+                '<td><%= shotsCount %></td>',
+                '<td><%= followersCount %></td>',
+                '<td><%= likesReceived %></td>',
+                '<td><%= reboundsReceived %></td>',
+                '<td><%= commentsReceived %></td>',
+              '</tr>',
+            '</tbody>',
+          '</table>',
+          '<table class="player-card-table pure-table">',
+            '<thead>',
+              '<tr>',
+                '<th>Draftees</th>',
+                '<th>Following</th>',
+                '<th>Likes</th>',
+                '<th>Rebounds</th>',
+                '<th>Comments</th>',
+              '</tr>',
+            '</thead>',
+            '<tbody>',
+              '<tr>',
+                '<td><%= draftees %></td>',
+                '<td><%= followingCount %></td>',
+                '<td><%= likesCount %></td>',
+                '<td><%= reboundsCount %></td>',
+                '<td><%= commentsCount %></td>',
+              '</tr>',
+            '</tbody>',
+          '</table>',
         '</div>',
       '</div>'
       ].join(''));
@@ -73,7 +127,7 @@
         }
       }
       if(notYet){
-        socket.emit('addPlayersToBench', {players: [player], bench: daBench['_id']})
+        socket.emit('addPlayersToBench', {players: [player], bench: daBench._id});
       }else{
         alert('Already present!');
       }
@@ -82,6 +136,45 @@
   }
   function playerDrag (evt) {
     bbbench.draggard = [parseInt(evt.target.dataset.dribbbleId, 10)];
+  }
+  function readyRemovePlayers () {
+    var removePlayers = document.getElementsByClassName('remove-button');
+    for (var i = removePlayers.length - 1; i >= 0; i--) {
+      removePlayers[i].addEventListener('click', removePlayer, false);
+    }
+  }
+  function removePlayer (evt) {
+    var playerElem = this.parentNode.parentNode.parentNode.parentNode,
+      dribbbleId = playerElem.dataset.dribbbleId,
+      dribbbleName = playerElem.dataset.dribbbleName,
+      workList = document.getElementsByClassName('work-list')[0],
+      benchId = workList.dataset.benchId,
+      daBench = _.find(bbbench.benches, {'_id': benchId}),
+      player = _.find(daBench.players, {'dribbbleId': dribbbleId});
+    socket.emit('removePlayerFromBench', {bench: benchId, player: player});
+    playerElem.parentNode.removeChild(playerElem);
+    for (var i = daBench.players.length - 1; i >= 0; i--) {
+      if(daBench.players[i].dribbbleId == dribbbleId) {
+        daBench.players.splice(i, 1);
+      }
+    }
+  }
+  function readyMoreInfos () {
+    var moreInfos = document.getElementsByClassName('more-info-button');
+    for (var i = moreInfos.length - 1; i >= 0; i--) {
+      moreInfos[i].addEventListener('click', showPlayerCard, false);
+    }
+  }
+  function showPlayerCard (evt) {
+    var spanClass = this.children[0].className,
+      card = this.parentNode.parentNode.parentNode.parentNode.getElementsByClassName('player-card')[0];
+    if (spanClass == 'icon-arrow-down5') {
+      this.children[0].className = 'icon-arrow-up5';
+      card.style.display = 'block';
+    } else {
+      this.children[0].className = 'icon-arrow-down5';
+      card.style.display = 'none';
+    }
   }
   function readySorters (playerSorters, workSorters) {
     for (var i = playerSorters.length - 1; i >= 0; i--) {
@@ -129,7 +222,7 @@
       map.sort(compareFollowers);
     }
     var result = map.map(function(e){
-      return playersToSort[e.index]
+      return playersToSort[e.index];
     });
     return result;
   }
@@ -168,11 +261,13 @@
         likesCount: placeGroup[i].likes_count,
         likesReceived: placeGroup[i].likes_received_count,
         reboundsCount: placeGroup[i].rebounds_count,
-        reboundsReceived: placeGroup[i].rebounds_received_count
+        reboundsReceived: placeGroup[i].rebounds_received_count,
+        draftees: placeGroup[i].draftees_count
       }));
       // socket.emit('findPlayerBenches', {dribbbleName: placeGroup[i].username, requestor: userId, elem: elemId});
     }
     playerLists[0].innerHTML = tempHTML.join('');
+    readyMoreInfos();
   }
   function sortWork (evt) {
     evt.preventDefault();
@@ -212,17 +307,20 @@
           likesCount: daBench.players[i].likesCount,
           likesReceived: daBench.players[i].likesReceivedCount,
           reboundsCount: daBench.players[i].reboundsCount,
-          reboundsReceived: daBench.players[i].reboundsReceivedCount
+          reboundsReceived: daBench.players[i].reboundsReceivedCount,
+          draftees: daBench.players[i].drafteesCount
         });
         // socket.emit('findPlayerBenches', {dribbbleName: daBench.players[i].username, requestor: userId, elem: elemId});
       }
+      readyMoreInfos();
+      readyRemovePlayers();
     }
   }
   function handleAnyone (evt) {
     evt.preventDefault();
     var person = prompt("Please enter a Dribbble player's username:","Harry Potter"),
       playerList = document.getElementsByClassName('player-list')[0];
-    if (person!=null) {
+    if (person!==null) {
       playerList.innerHTML = null;
       classie.add(this, 'active');
       classie.remove(document.getElementsByClassName('who-i-follow')[0], 'active');
@@ -263,12 +361,14 @@
         likesCount: placeGroup[i].likes_count,
         likesReceived: placeGroup[i].likes_received_count,
         reboundsCount: placeGroup[i].rebounds_count,
-        reboundsReceived: placeGroup[i].rebounds_received_count
+        reboundsReceived: placeGroup[i].rebounds_received_count,
+        draftees: placeGroup[i].draftees_count
       }));
       // socket.emit('findPlayerBenches', {dribbbleName: placeGroup[i].username, requestor: userId, elem: elemId});
     }
     playerLists[0].innerHTML = tempHTML.join('');
     document.getElementsByClassName('player-heading')[0].innerHTML = placeGroup.length.toString() + ' Players';
+    readyMoreInfos();
   }
   function readyBenchLinks (benchLinks) {
     var closeWork = document.getElementsByClassName('close-work')[0],
@@ -320,8 +420,8 @@
     classie.add(this, 'active');
     workHeading.innerHTML = daBench.title + ' (' + daBench.players.length.toString() + ')';
     workActions.style.display = 'block';
-    workActions.children[0].href = '/bench/' + daBench['_id'];
-    list.dataset.benchId = daBench['_id'];
+    workActions.children[0].href = '/bench/' + daBench._id;
+    list.dataset.benchId = daBench._id;
     list.innerHTML = null;
     for (i = daBench.players.length - 1; i >= 0; i--) {
       elemId = 'working-' + i.toString();
@@ -347,10 +447,13 @@
         likesCount: daBench.players[i].likesCount,
         likesReceived: daBench.players[i].likesReceivedCount,
         reboundsCount: daBench.players[i].reboundsCount,
-        reboundsReceived: daBench.players[i].reboundsReceivedCount
+        reboundsReceived: daBench.players[i].reboundsReceivedCount,
+        draftees: daBench.players[i].drafteesCount
       });
       // socket.emit('findPlayerBenches', {dribbbleName: daBench.players[i].username, requestor: userId, elem: elemId});
     }
+    readyMoreInfos();
+    readyRemovePlayers();
   }
   function handlePlayerInfo(id, data){
     var elemId,
@@ -379,13 +482,15 @@
         likesCount: data.likes_count,
         likesReceived: data.likes_received_count,
         reboundsCount: data.rebounds_count,
-        reboundsReceived: data.rebounds_received_count
+        reboundsReceived: data.rebounds_received_count,
+        draftees: data.draftees_count
       });
       // socket.emit('findPlayerBenches', {dribbbleName: data.players[i].username, requestor: userId, elem: elemId});
       for (i = playerLists[0].children.length - 1; i >= 0; i--) {
         playerLists[0].children[i].addEventListener('drag', playerDrag, false);
       }
       playerHeading.innerHTML = '1 Player';
+      readyMoreInfos();
     }
   }
   function handlePlayerAdded(data) {
@@ -395,12 +500,12 @@
       list = workBench.getElementsByClassName('work-list')[0],
       daBench, elemId;
     for (var i = bbbench.benches.length - 1; i >= 0; i--) {
-      if(bbbench.benches[i]['_id'] == data.bench['_id']) {
+      if(bbbench.benches[i]._id == data.bench._id) {
         bbbench.benches[i] = data.bench;
         daBench = bbbench.benches[i];
       }
     }
-    if (list.dataset.benchId == data.bench['_id']) {
+    if (list.dataset.benchId == data.bench._id) {
       workHeading.innerHTML = daBench.title + ' (' + daBench.players.length.toString() + ')';
       list.innerHTML = null;
       for (i = daBench.players.length - 1; i >= 0; i--) {
@@ -427,10 +532,13 @@
           likesCount: daBench.players[i].likesCount,
           likesReceived: daBench.players[i].likesReceivedCount,
           reboundsCount: daBench.players[i].reboundsCount,
-          reboundsReceived: daBench.players[i].reboundsReceivedCount
+          reboundsReceived: daBench.players[i].reboundsReceivedCount,
+          draftees: daBench.players[i].drafteesCount
         });
         // socket.emit('findPlayerBenches', {dribbbleName: daBench.players[i].username, requestor: userId, elem: elemId});
       }
+      readyMoreInfos();
+      readyRemovePlayers();
     }
   }
   function handlePlayerFollowing(id, data){
@@ -458,7 +566,8 @@
         likesCount: data.players[i].likes_count,
         likesReceived: data.players[i].likes_received_count,
         reboundsCount: data.players[i].rebounds_count,
-        reboundsReceived: data.players[i].rebounds_received_count
+        reboundsReceived: data.players[i].rebounds_received_count,
+        draftees: data.players[i].draftees_count
       });
       // socket.emit('findPlayerBenches', {dribbbleName: data.players[i].username, requestor: userId, elem: elemId});
       data.players[i].elemId = elemId;
@@ -467,6 +576,7 @@
     for (i = playerLists[0].children.length - 1; i >= 0; i--) {
       playerLists[0].children[i].addEventListener('drag', playerDrag, false);
     }
+    readyMoreInfos();
     playerHeading.innerHTML = bbbench.following.length.toString() + ' Players';
     if(parseInt(data.page, 10) < (location.hostname == 'localhost' ? 1 : parseInt(data.pages, 10))){
       setTimeout(function(){

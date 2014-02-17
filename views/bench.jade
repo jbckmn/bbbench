@@ -1,8 +1,13 @@
 extends layout
 
 block content
-  .container.pure-g-r
-    .pure-u-1-2.pull-center
-      h1 #{bench.title}
-      blockquote#about #{bench.description}
-      p By #{owner.dribbble}
+  .container.pure-g
+    .pure-u-1-4
+      .bench-bar
+        .bench-bar-inner
+          include benchHeader
+    .pure-u-3-8
+      .margin-15
+        h1 #{bench.title}
+        blockquote#about #{bench.description}
+        p By #{owner.dribbble}
