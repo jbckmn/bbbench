@@ -4,7 +4,7 @@ html
     title= title
     meta(name="viewport", content="width=device-width, initial-scale=1")
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:300,700,600')
-    if req.headers.host == 'localhost:3000'
+    if req && req.headers.host == 'localhost:3000'
       link(rel='stylesheet', href='/stylesheets/pure-min.css')
       link(rel='stylesheet', href='/stylesheets/icons.css')
       link(rel='stylesheet', href='/stylesheets/style.css')
@@ -42,7 +42,7 @@ html
     block content
 
     script(src="/socket.io/socket.io.js")
-    if req.headers.host == 'localhost:3000'
+    if req && req.headers.host == 'localhost:3000'
       script(src="/javascripts/lodash.js")
       script(src="/javascripts/lodash-ext.js")
       script(src="/javascripts/classie.js")
