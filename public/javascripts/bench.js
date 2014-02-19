@@ -128,7 +128,7 @@
           notYet = false;
         }
       }
-      if(notYet){
+      if(notYet && player && daBench){
         socket.emit('addPlayersToBench', {players: [player], bench: daBench._id});
       }else{
         alert('Already present!');
@@ -153,7 +153,9 @@
       benchId = workList.dataset.benchId,
       daBench = _.find(bbbench.benches, {'_id': benchId}),
       player = _.find(daBench.players, {'dribbbleId': dribbbleId});
-    socket.emit('removePlayerFromBench', {bench: benchId, player: player});
+    if(benchId && player){
+      socket.emit('removePlayerFromBench', {bench: benchId, player: player});
+    }
     playerElem.parentNode.removeChild(playerElem);
     for (var i = daBench.players.length - 1; i >= 0; i--) {
       if(daBench.players[i].dribbbleId == dribbbleId) {
