@@ -36,15 +36,16 @@ block content
           .work-list.list
       .pure-u-3-8
         .player-bar
+          #following-load
           .pure-g
             .pure-u-1-2
-              h2.player-heading Players
+              h2.player-heading
+                small.muted Fetching players you follow
             .pure-u-1-2
               .player-actions
                 a.player-type-link.who-i-follow.active Who I Follow
                 |  | 
                 a.player-type-link.add-anyone Search
-          #following-load
           #players-home-list
             .player-sort
               a.player-sorter.sort(data-sort-by="name") Alphabetically

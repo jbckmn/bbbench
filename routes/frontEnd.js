@@ -167,7 +167,7 @@ module.exports = function (app, ensureAuth, io) {
                 throw err;
               }
               req.flash('message', 'Updates were successful.');
-              res.redirect('/settings');
+              res.redirect('/');
             });
           });
         } else {
@@ -182,7 +182,7 @@ module.exports = function (app, ensureAuth, io) {
               throw err;
             }
             req.flash('message', 'Updates were successful.');
-            res.redirect('/settings');
+            res.redirect('/');
           });
         }
       });

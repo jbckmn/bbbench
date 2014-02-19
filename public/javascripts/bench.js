@@ -48,6 +48,8 @@
             '<h3 class="player-card-name"><%= name %></h3>',
             '<h5 class="player-card-occupation"><span class="icon-location"></span> <%= location %></h5>',
           '</div>',
+          '<div class="latest text-center">',
+          '</div>',
           '<table class="player-card-table pure-table">',
             '<caption>Major League Record</caption>',
             '<thead>',
@@ -128,8 +130,12 @@
           notYet = false;
         }
       }
-      if(notYet && player && daBench){
-        socket.emit('addPlayersToBench', {players: [player], bench: daBench._id});
+      if(notYet){
+        if (player && daBench) {
+          socket.emit('addPlayersToBench', {players: [player], bench: daBench._id});
+        } else{
+          alert('There seems to be an error with that. Maybe try refreshing the page?');
+        }
       }else{
         alert('Already present!');
       }
@@ -155,6 +161,8 @@
       player = _.find(daBench.players, {'dribbbleId': dribbbleId});
     if(benchId && player){
       socket.emit('removePlayerFromBench', {bench: benchId, player: player});
+    } else{
+      alert('There seems to be an error with that. Maybe try refreshing the page?');
     }
     playerElem.parentNode.removeChild(playerElem);
     for (var i = daBench.players.length - 1; i >= 0; i--) {
@@ -175,10 +183,20 @@
     if (spanClass == 'icon-arrow-down5') {
       this.children[0].className = 'icon-arrow-up5';
       card.style.display = 'block';
+      _.asyncRequest(playerShotsUrl(card.parentNode.dataset.dribbbleId) + addendum, card.parentNode.id, handlePlayerLatest);
     } else {
       this.children[0].className = 'icon-arrow-down5';
       card.style.display = 'none';
     }
+  }
+  function handlePlayerLatest (id, data) {
+    var player = document.getElementById(id),
+      enough = (data.shots.length > 0),
+      imgUrl = enough ? data.shots[0].image_teaser_url : '',
+      imgLink = enough ? data.shots[0].url : '',
+      imgTitle = enough ? data.shots[0].title : '',
+      latestDiv = player.getElementsByClassName('player-card')[0].getElementsByClassName('latest')[0];
+    latestDiv.innerHTML = ['<a href="', imgLink, '" target="_blank" class="latest-img-link" title="', imgTitle, '"><img src="', imgUrl, '" class="latest-img"/></a>'].join('');
   }
   function readySorters (playerSorters, workSorters) {
     for (var i = playerSorters.length - 1; i >= 0; i--) {
@@ -563,6 +581,7 @@
     var elemId,
       followingLoad = document.getElementById('following-load'),
       playerHeading = document.getElementsByClassName('player-heading')[0];
+    followingLoad.style.width = ((parseInt(data.page, 10) / parseFloat(data.pages)) * 100).toString() + '%';
     for (i = data.players.length - 1; i >= 0; i--) {
       elemId = 'players-' + i.toString();
       playerLists[0].innerHTML += playerTemplate({
@@ -596,15 +615,14 @@
       playerLists[0].children[i].addEventListener('drag', playerDrag, false);
     }
     readyMoreInfos();
-    playerHeading.innerHTML = '<small class="muted">Fetching players you follow</small>';
-    if(parseInt(data.page, 10) < (location.hostname == 'localhost' ? 1 : parseInt(data.pages, 10))){
-      followingLoad.style.width = (parseInt(data.page, 10) / (location.hostname == 'localhost' ? 1.0 : parseFloat(data.pages))).toString() + '%';
+    if(parseInt(data.page, 10) < (location.hostname == 'localhost' ? 2 : parseInt(data.pages, 10))){
       setTimeout(function(){
         _.asyncRequest(playerFollowingUrl(dribbbleId) + addendum + '&page=' + (parseInt(data.page, 10) + 1).toString(), 'following', handlePlayerFollowing);
       }, 1100);
     } else {
       followingLoad.style.backgroundColor = 'transparent';
       followingLoad.style.width = '100%';
+      followingLoad.style.height = '0px';
       playerHeading.innerHTML = bbbench.following.length.toString() + ' Players';
       bbbench.followingMap = bbbench.followingMap || createFollowingMap();
     }
