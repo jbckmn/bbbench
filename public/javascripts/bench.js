@@ -425,7 +425,7 @@
   }
   function fakeClick(anchorObj) {
     if (anchorObj.click) {
-      anchorObj.click()
+      anchorObj.click();
     } else if(document.createEvent) {
       var evt = document.createEvent("MouseEvents"); 
       evt.initMouseEvent("click", true, true, window, 
