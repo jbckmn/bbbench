@@ -14,13 +14,18 @@ module.exports = function (app, ensureAuth, io) {
     if (req.user) {
       if (req.user.dribbble) {
         Bench.find({userId: req.user._id}).lean().exec(function(err, benches) {
-          res.render('index', { title: config.name,
+          if (benches.length > 0) {
+            res.render('index', { title: config.name,
                               user: req.user,
                               isHome: true,
                               req: req,
                               benches: benches,
                               message: req.flash('message'), 
                               error: req.flash('error') });
+          } else {
+            req.flash('error', 'You should create your first bbbench!');
+            res.redirect('/new-bench');
+          }
         });
       } else {
         req.flash('error', 'You should fill in a dribbble username.');
@@ -54,7 +59,7 @@ module.exports = function (app, ensureAuth, io) {
         console.log(err);
       }
       req.flash('message', 'Bench built!');
-      res.redirect('/bench/' + bench._id);
+      res.redirect('/');
     });
   });
   app.get('/bench/:id', function(req, res) {

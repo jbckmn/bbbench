@@ -99,13 +99,15 @@
 // logic
   if (dribbbleId && userId && isHome) {
     _.asyncRequest(playerFollowingUrl(dribbbleId) + addendum, dribbbleId, handlePlayerFollowing);
-    var followingLoader = setInterval(function(){runFollowingLoader();}, 500);
     socket.on('foundPlayerBenches', handlePlayerBenches);
     socket.on('addedPlayersToBench', handlePlayerAdded);
     readyBenchLinks(benchLinks);
     readySorters(playerSorters, workSorters);
     addAnyone[0].addEventListener('click', handleAnyone, false);
     whoIFollow[0].addEventListener('click', handleWhoIFollow, false);
+    if (benchLinks.length > 0) {
+      fakeClick(benchLinks[0]);
+    }
   }
 
 // functions
@@ -401,6 +403,20 @@
     workHeading.innerHTML = '<span class="muted">Select a bench</span>';
     workActions.style.display = 'none';
   }
+  function fakeClick(anchorObj) {
+    if (anchorObj.click) {
+      anchorObj.click()
+    } else if(document.createEvent) {
+      var evt = document.createEvent("MouseEvents"); 
+      evt.initMouseEvent("click", true, true, window, 
+          0, 0, 0, 0, 0, false, false, false, false, 0, null); 
+      var allowDefault = anchorObj.dispatchEvent(evt);
+      // you can check allowDefault for false to see if
+      // any handler called evt.preventDefault().
+      // Firefox will *not* redirect to anchorObj.href
+      // for you. However every other browser will.
+    }
+  }
   function readyWorkBench (evt) {
     evt.preventDefault();
     var id = this.dataset.benchId,
@@ -543,6 +559,7 @@
   }
   function handlePlayerFollowing(id, data){
     var elemId,
+      followingLoad = document.getElementById('following-load'),
       playerHeading = document.getElementsByClassName('player-heading')[0];
     for (i = data.players.length - 1; i >= 0; i--) {
       elemId = 'players-' + i.toString();
@@ -577,13 +594,16 @@
       playerLists[0].children[i].addEventListener('drag', playerDrag, false);
     }
     readyMoreInfos();
-    playerHeading.innerHTML = bbbench.following.length.toString() + ' Players';
+    playerHeading.innerHTML = '<small class="muted">Fetching players you follow</small>';
     if(parseInt(data.page, 10) < (location.hostname == 'localhost' ? 1 : parseInt(data.pages, 10))){
+      followingLoad.style.width = (parseInt(data.page, 10) / (location.hostname == 'localhost' ? 1.0 : parseFloat(data.pages))).toString() + '%';
       setTimeout(function(){
         _.asyncRequest(playerFollowingUrl(dribbbleId) + addendum + '&page=' + (parseInt(data.page, 10) + 1).toString(), 'following', handlePlayerFollowing);
       }, 1100);
     } else {
-      clearInterval(followingLoader);
+      followingLoad.style.backgroundColor = 'transparent';
+      followingLoad.style.width = '100%';
+      playerHeading.innerHTML = bbbench.following.length.toString() + ' Players';
       bbbench.followingMap = bbbench.followingMap || createFollowingMap();
     }
   }
@@ -594,10 +614,6 @@
         players[i].dataset.benchCount = data.count;
       }
     }
-  }
-  function runFollowingLoader () {
-    var playerHeading = document.getElementsByClassName('player-heading')[0];
-    playerHeading.innerHTML += ' .';
   }
   function playerInfoUrl(id){
     return 'http://api.dribbble.com/players/' + id;

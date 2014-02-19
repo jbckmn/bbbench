@@ -67,26 +67,27 @@
       div.appendChild(input);
       fields.insertBefore(div, fields.children[fields.children.length - 1]);
       // next 
-      div = document.createElement('div');
-      label = document.createElement('label');
-      input = document.createElement('input');
-      input.type = 'text';
-      input.name = 'dribbble';
-      input.placeholder = 'dribbble';
-      input.className = 'text-field';
-      label.for = 'dribbble';
-      label.textContent = 'Dribbble username';
-      div.className = 'pure-control-group';
-      div.appendChild(label);
-      div.appendChild(input);
-      fields.insertBefore(div, fields.children[0]);
+      // div = document.createElement('div');
+      // label = document.createElement('label');
+      // input = document.createElement('input');
+      // input.type = 'text';
+      // input.name = 'dribbble';
+      // input.placeholder = 'dribbble';
+      // input.className = 'text-field';
+      // label.for = 'dribbble';
+      // label.textContent = 'Dribbble username';
+      // div.className = 'pure-control-group';
+      // div.appendChild(label);
+      // div.appendChild(input);
+      // fields.insertBefore(div, fields.children[0]);
+      
       fields.parentNode.children[0].childNodes[0].textContent = 'Register';
       this.textContent = 'Sign In';
       this.dataset.toggleTo = 'signin';
       fields.parentNode.action = '/register';
     } else {
       fields.removeChild(fields.children[fields.children.length - 2]);
-      fields.removeChild(fields.children[0]);
+      // fields.removeChild(fields.children[0]);
       fields.parentNode.children[0].childNodes[0].textContent = 'Sign In';
       this.textContent = 'Register';
       this.dataset.toggleTo = 'register';
