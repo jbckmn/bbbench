@@ -27,18 +27,19 @@ html
       ga('send', 'pageview');
 
   body
-    if message && message.length > 0
+    if message.length > 0 || error.length > 0
       #messages
-        p.pull-center.message
-          a(onclick="dismissAlert(this.parentNode.parentNode);", style="margin-right:1em;")
-            span.x-remove X
-          | #{message}
-    if error && error.length > 0
-      #error-messages
-        p.pull-center.error
-          a(onclick="dismissAlert(this.parentNode.parentNode);", style="margin-right:1em;")
-            span.x-remove X
-          | #{error}
+        .wrapper
+          if message.length > 0
+            p.pull-center.message
+              a(onclick="dismissAlert(this.parentNode.parentNode);").dismiss-alert
+                span.icon-cross
+              | #{message}
+          if error.length > 0
+            p.pull-center.error
+              a(onclick="dismissAlert(this.parentNode.parentNode);").dismiss-alert
+                span.icon-cross
+              | #{error}
     block content
 
     script(src="/socket.io/socket.io.js")

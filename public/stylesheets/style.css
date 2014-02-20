@@ -168,11 +168,13 @@ a:hover{
   top:-8px;
   margin-right: 3px;
 }
-.share-work:hover, .close-work:hover{
-  border: none;
+.share-work:hover{
+  border: 1px solid #bbb;
+  opacity: 1;
 }
 .close-work:hover{
   color: #ea4c89;
+  border: none;
 }
 .close-work{
   color: #333;
@@ -248,7 +250,6 @@ a:hover{
 }
 .player-pic{
   display: inline-block;
-  cursor: move;
   margin-right: 10px;
 }
 .player.no-drag .player-pic:hover{
@@ -347,6 +348,12 @@ a:hover{
   position: relative;
   top:3px;
 }
+.player-basics .dribbble-link:hover, .player-basics .twitter-link:hover, .player-basics .web-link:hover, .player-basics .mail-link:hover{
+  opacity: 1;
+}
+.player-basics .twitter-link:hover{
+  color: #55acee;
+}
 .player-followers-count .more-info-button, .player-followers-count .remove-button{
   color: #333;
   background-color: white;
@@ -363,14 +370,21 @@ a:hover{
 }
 .player-followers-count .buttons a.more-info-button:hover, .player-followers-count .buttons a.remove-button:hover{
   border: 1px solid #fff;
+  opacity: 1;
 }
 
 .player-card{
   display: none;
 }
 .player-card .latest-img-link{
-  margin-top: 1em;
   display: inline-block;
+}
+.player-card .latest-img-link:hover{
+  border: none;
+}
+.player-card .latest-img-link h4{
+  font-weight: 700;
+  color:#222;
 }
 .player-card-table{
   width: 100%;
@@ -388,6 +402,53 @@ a:hover{
 .player-card-table caption{
   font:inherit;
   font-weight: 700;
+}
+
+#messages{
+  position: fixed;
+  background-color:rgba(0,0,0,0.5);
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  z-index: 100;
+  text-align: center;
+  padding-top: 20vh;
+}
+#messages .wrapper{
+  background-color:#eee;
+  display: inline-block;
+  padding: 1em 2em;
+  border: none;
+  border-radius: 10px;
+}
+#messages .message{
+  color: #ADCD2D;
+}
+#messages .error{
+  color: #CF381C;
+}
+.dismiss-alert{
+  color: #aaa;
+  font-size:1.5em;
+  vertical-align: middle;
+  margin-right: 1em;
+}
+.dismiss-alert:hover{
+  border: none;
+  color: #ea4c89;
+}
+
+input[type="submit"]{
+  color: #ADCD2D;
+  border: 2px solid #ADCD2D;
+  border-radius: 3px;
+  background-color: rgba(173,205,45,0.1);
+  padding: 0.4em 0.75em;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+}
+input[type="submit"]:hover{
+  background-color: white;
 }
 
 .margin-15{

@@ -20,7 +20,7 @@
         '<span class="likes" style="display:none;"><%= likesReceived %></span>',
         '<div class="player-main">',
           '<div class="player-pic">',
-            '<img class="player-img" src="<%= image %>" title="<%= name %>" alt="<%= name %>" />',
+            '<img class="player-img" src="<%= image %>" title="<%= name %>" alt="<%= name %>" draggable="false" />',
           '</div>',
           '<div class="player-basics">',
             '<div class="lead name"><%= name %></div>',
@@ -196,7 +196,7 @@
       imgLink = enough ? data.shots[0].url : '',
       imgTitle = enough ? data.shots[0].title : '',
       latestDiv = player.getElementsByClassName('player-card')[0].getElementsByClassName('latest')[0];
-    latestDiv.innerHTML = ['<a href="', imgLink, '" target="_blank" class="latest-img-link" title="', imgTitle, '"><img src="', imgUrl, '" class="latest-img"/></a>'].join('');
+    latestDiv.innerHTML = ['<a href="', imgLink, '" target="_blank" class="latest-img-link" title="', imgTitle, '"><h4>Latest Shot</h4><img src="', imgUrl, '" class="latest-img"/></a>'].join('');
   }
   function readySorters (playerSorters, workSorters) {
     for (var i = playerSorters.length - 1; i >= 0; i--) {

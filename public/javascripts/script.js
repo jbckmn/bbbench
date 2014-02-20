@@ -17,6 +17,7 @@
 
 function dismissAlert(elem){
   elem.innerHTML = '';
+  document.getElementById('messages').style.display = 'none';
 }
 
 // Set up sockets
