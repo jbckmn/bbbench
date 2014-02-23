@@ -172,6 +172,18 @@ a:hover{
   border: 1px solid #bbb;
   opacity: 1;
 }
+.edit-work:hover{
+  color: #ea4c89;
+  border: none;
+}
+.edit-work{
+  color: #333;
+  font-weight: 700;
+  font-size: 1.25em;
+  position: relative;
+  bottom: 3px;
+  margin-left: 5px;
+}
 .close-work:hover{
   color: #ea4c89;
   border: none;
@@ -270,6 +282,29 @@ a:hover{
   font-weight: 700;
   font-size: 16px;
   margin-bottom: 3px;
+}
+.player-basics .lead .icon-star2{
+  margin: 0.5em;
+  top: 1px;
+  position: relative;
+  opacity: 0.3;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+}
+.player-basics .lead .icon-star2:hover{
+  cursor: pointer;
+  color: #ea4c89;
+  opacity: 0.75;
+}
+.player-basics .lead .icon-star{
+  margin: 0.5em;
+  top: 1px;
+  position: relative;
+  color: #ea4c89;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+}
+.player-basics .lead .icon-star:hover{
+  cursor: pointer;
+  color: darkgrey;
 }
 .player-basics .detail{
   font-size: 0.7em;
@@ -378,6 +413,7 @@ a:hover{
 }
 .player-card .latest-img-link{
   display: inline-block;
+  color:#222;
 }
 .player-card .latest-img-link:hover{
   border: none;
@@ -385,6 +421,27 @@ a:hover{
 .player-card .latest-img-link h4{
   font-weight: 700;
   color:#222;
+}
+.latest-img-wrap{
+  font-size: 0.8em;
+  display: inline-block;
+  text-align: right;
+  padding: 1em 1em 0.5em;
+  border:1px solid #eee;
+  border-radius: 4px;
+}
+.latest-img{
+  display: block;
+  margin-bottom: 0.5em;
+}
+.latest-img-wrap .latest-img-views, .latest-img-wrap .latest-img-comments, .latest-img-wrap .latest-img-likes{
+  opacity: 0.5;
+  margin-left: 0.75em;
+  display: inline-block;
+}
+.latest-img-wrap .icon-eye, .latest-img-wrap .icon-comment, .latest-img-wrap .icon-heart{
+  position: relative;
+  top: 1px;
 }
 .player-card-table{
   width: 100%;

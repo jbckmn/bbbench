@@ -23,7 +23,11 @@
             '<img class="player-img" src="<%= image %>" title="<%= name %>" alt="<%= name %>" draggable="false" />',
           '</div>',
           '<div class="player-basics">',
-            '<div class="lead name"><%= name %></div>',
+            '<div class="lead name"><%= name %>',
+              '<% if (!draggable) { %>',
+                '<span title="<%= captain ? \'I am the captain of this bench.\' : \'Make me captain!\' %>" class="icon-<%= captain ? \'star\' : \'star2\' %> captain-button" data-captain-status="<%= captain ? \'1\' : \'0\' %>"></span>',
+              '<% } %>',
+            '</div>',
             '<div class="detail"><span class="icon-location"></span> <%= location %></div>',
             '<div class="buttons">',
               '<a class="dribbble-link" href="<%= dribbbleUrl %>" target="_blank">Dribbble</a>',
@@ -93,6 +97,18 @@
           '</table>',
         '</div>',
       '</div>'
+      ].join('')),
+    messageTemplate = _.template([
+      '<p class="pull-center message">',
+        '<a onclick="dismissAlert(this.parentNode.parentNode);" class="dismiss-alert"><span class="icon-cross"></span></a>',
+        '<%= message %>',
+      '</p>'
+      ].join('')),
+    errorTemplate = _.template([
+      '<p class="pull-center error">',
+        '<a onclick="dismissAlert(this.parentNode.parentNode);" class="dismiss-alert"><span class="icon-cross"></span></a>',
+        '<%= error %>',
+      '</p>'
       ].join(''));
   bbbench.uid = userId;
   bbbench.dribbbleId = dribbbleId;
@@ -103,6 +119,8 @@
     _.asyncRequest(playerFollowingUrl(dribbbleId) + addendum, dribbbleId, handlePlayerFollowing);
     socket.on('foundPlayerBenches', handlePlayerBenches);
     socket.on('addedPlayersToBench', handlePlayerAdded);
+    socket.on('madeBenchCaptain', generalAlert);
+    socket.on('removedBenchCaptain', generalAlert);
     readyBenchLinks(benchLinks);
     readySorters(playerSorters, workSorters);
     addAnyone[0].addEventListener('click', handleAnyone, false);
@@ -111,6 +129,7 @@
       fakeClick(benchLinks[0]);
     }
   }
+  updateCycle();
 
 // functions
   function workListDrag (evt) {
@@ -134,10 +153,10 @@
         if (player && daBench) {
           socket.emit('addPlayersToBench', {players: [player], bench: daBench._id});
         } else{
-          alert('There seems to be an error with that. Maybe try refreshing the page?');
+          generalAlert({error: 'There seems to be an error with that. Maybe you should try refreshing the page?'});
         }
       }else{
-        alert('Already present!');
+        generalAlert({error: 'Already present!'});
       }
     }
     bbbench.draggard = [];
@@ -146,9 +165,42 @@
     bbbench.draggard = [parseInt(evt.target.dataset.dribbbleId, 10)];
   }
   function readyRemovePlayers () {
-    var removePlayers = document.getElementsByClassName('remove-button');
+    var removePlayers = document.getElementsByClassName('remove-button'),
+      captainButtons = document.getElementsByClassName('captain-button');
     for (var i = removePlayers.length - 1; i >= 0; i--) {
       removePlayers[i].addEventListener('click', removePlayer, false);
+    }
+    for (i = captainButtons.length - 1; i >= 0; i--) {
+      captainButtons[i].addEventListener('click', switchCaptain, false);
+    }
+  }
+  function switchCaptain (evt) {
+    var playerElem = this.parentNode.parentNode.parentNode.parentNode,
+      dribbbleId = playerElem.dataset.dribbbleId,
+      dribbbleName = playerElem.dataset.dribbbleName,
+      workList = document.getElementsByClassName('work-list')[0],
+      benchId = workList.dataset.benchId,
+      daBench = _.find(bbbench.benches, {'_id': benchId}),
+      player = _.find(daBench.players, {'dribbbleId': dribbbleId}),
+      captainButtons = document.getElementsByClassName('captain-button'),
+      emitObj = {bench: benchId, player: player, elemId: playerElem.id},
+      captainStatus = this.dataset.captainStatus;
+    if(benchId && player){
+      if (captainStatus == '0') {
+        socket.emit('setBenchCaptain', emitObj);
+      } else if(captainStatus == '1'){
+        socket.emit('removeBenchCaptain', emitObj);
+      }
+    } else{
+      generalAlert({error: 'There seems to be an error with that. Maybe you should try refreshing the page?'});
+    }
+    for (var i = captainButtons.length - 1; i >= 0; i--) {
+      captainButtons[i].className = 'icon-star2 captain-button';
+      captainButtons[i].dataset.captainStatus = '0';
+    }
+    if(benchId && player && (captainStatus == '0')){
+      this.className = 'icon-star captain-button';
+      this.dataset.captainStatus = '1';
     }
   }
   function removePlayer (evt) {
@@ -162,7 +214,7 @@
     if(benchId && player){
       socket.emit('removePlayerFromBench', {bench: benchId, player: player});
     } else{
-      alert('There seems to be an error with that. Maybe try refreshing the page?');
+      generalAlert({error: 'There seems to be an error with that. Maybe yout should try refreshing the page?'});
     }
     playerElem.parentNode.removeChild(playerElem);
     for (var i = daBench.players.length - 1; i >= 0; i--) {
@@ -195,8 +247,21 @@
       imgUrl = enough ? data.shots[0].image_teaser_url : '',
       imgLink = enough ? data.shots[0].url : '',
       imgTitle = enough ? data.shots[0].title : '',
+      imgViews = enough ? data.shots[0].views_count : '',
+      imgLikes = enough ? data.shots[0].likes_count : '',
+      imgComments = enough ? data.shots[0].comments_count : '',
       latestDiv = player.getElementsByClassName('player-card')[0].getElementsByClassName('latest')[0];
-    latestDiv.innerHTML = ['<a href="', imgLink, '" target="_blank" class="latest-img-link" title="', imgTitle, '"><h4>Latest Shot</h4><img src="', imgUrl, '" class="latest-img"/></a>'].join('');
+    latestDiv.innerHTML = [
+      '<a href="', imgLink, '" target="_blank" class="latest-img-link" title="', imgTitle, '">',
+        '<h4>Latest Shot</h4>',
+        '<span class="latest-img-wrap">',
+          '<img src="', imgUrl, '" class="latest-img"/>',
+          '<span class="latest-img-views"><span class="icon-eye"></span> ', imgViews, '</span>',
+          '<span class="latest-img-comments"><span class="icon-comment"></span> ', imgComments, '</span>',
+          '<span class="latest-img-likes"><span class="icon-heart"></span> ', imgLikes, '</span>',
+        '</span>',
+      '</a>'
+      ].join('');
   }
   function readySorters (playerSorters, workSorters) {
     for (var i = playerSorters.length - 1; i >= 0; i--) {
@@ -267,6 +332,7 @@
         name: placeGroup[i].name,
         elemId: elemId,
         draggable: true,
+        captain: false,
         dribbbleId: placeGroup[i].id,
         draftedBy: placeGroup[i].drafted_by_player_id,
         image: placeGroup[i].avatar_url,
@@ -367,6 +433,7 @@
         name: placeGroup[i].name,
         elemId: elemId,
         draggable: true,
+        captain: false,
         dribbbleId: placeGroup[i].id,
         draftedBy: placeGroup[i].drafted_by_player_id,
         image: placeGroup[i].avatar_url,
@@ -457,6 +524,7 @@
     workHeading.innerHTML = daBench.title + ' (' + daBench.players.length.toString() + ')';
     workActions.style.display = 'block';
     workActions.children[0].href = '/bench/' + daBench._id;
+    workActions.children[1].href = '/bench/' + daBench._id + '/edit';
     list.dataset.benchId = daBench._id;
     list.innerHTML = null;
     for (i = daBench.players.length - 1; i >= 0; i--) {
@@ -502,6 +570,7 @@
         name: data.name,
         elemId: elemId,
         draggable: true,
+        captain: false,
         dribbbleId: data.id,
         draftedBy: data.drafted_by_player_id,
         image: data.avatar_url,
@@ -578,16 +647,17 @@
     }
   }
   function handlePlayerFollowing(id, data){
-    var elemId,
+    var elemId, dumbArray = [],
       followingLoad = document.getElementById('following-load'),
       playerHeading = document.getElementsByClassName('player-heading')[0];
     followingLoad.style.width = ((parseInt(data.page, 10) / parseFloat(data.pages)) * 100).toString() + '%';
     for (i = data.players.length - 1; i >= 0; i--) {
       elemId = 'players-' + i.toString();
-      playerLists[0].innerHTML += playerTemplate({
+      dumbArray.push(playerTemplate({
         name: data.players[i].name,
         elemId: elemId,
         draggable: true,
+        captain: false,
         dribbbleId: data.players[i].id,
         draftedBy: data.players[i].drafted_by_player_id,
         image: data.players[i].avatar_url,
@@ -606,11 +676,13 @@
         reboundsCount: data.players[i].rebounds_count,
         reboundsReceived: data.players[i].rebounds_received_count,
         draftees: data.players[i].draftees_count
-      });
+      }));
       // socket.emit('findPlayerBenches', {dribbbleName: data.players[i].username, requestor: userId, elem: elemId});
       data.players[i].elemId = elemId;
+      socket.emit('updatePlayer', data.players[i]);
       bbbench.following.push(data.players[i]);
     }
+    playerLists[0].innerHTML += dumbArray.join('');
     for (i = playerLists[0].children.length - 1; i >= 0; i--) {
       playerLists[0].children[i].addEventListener('drag', playerDrag, false);
     }
@@ -633,6 +705,23 @@
       if(players[i].dataset.dribbbleName == data.name) {
         players[i].dataset.benchCount = data.count;
       }
+    }
+  }
+  function generalAlert (data) {
+    var messageElem = document.getElementById('messages'),
+      wrapper = messageElem.children[0];
+    if (data.error) {
+      wrapper.innerHTML = errorTemplate({error: data.error});
+    } else if (data.message) {
+      wrapper.innerHTML = messageTemplate({message: data.message});
+    }
+    messageElem.style.display = 'block';
+  }
+  function updateCycle () {
+    var list = document.getElementsByClassName('player no-drag'),
+      newA = [];
+    for (var i = list.length - 1; i >= 0; i--) {
+      newA.push({dribbbleId: list[i].dribbbleId, elemId: list[i].id});
     }
   }
   function playerInfoUrl(id){

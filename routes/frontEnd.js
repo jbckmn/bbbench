@@ -69,7 +69,7 @@ module.exports = function (app, ensureAuth, io) {
         res.redirect('/');
         console.log(err);
       }
-      if(bench){
+      if(bench && bench.openPublic){
         User.findById(bench.userId).lean().exec(function(err, owner){
           if(err) {
             req.flash('error', 'There was a problem finding your bench: '+err);
@@ -96,7 +96,7 @@ module.exports = function (app, ensureAuth, io) {
         res.redirect('/');
         console.log(err);
       }
-      if(bench && bench.userId == req.user._id){
+      if( bench && (bench.userId.toString() == req.user._id.toString()) ) {
         res.render('benchForm', { title: 'Editing '+bench.title,
                                   user: req.user,
                                   bench: bench,

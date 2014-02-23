@@ -10,66 +10,10 @@ block content
       .margin-15
         h1 #{bench.title}
         blockquote#about #{bench.description}
-        p By #{owner.dribbble}
+        p By #{owner.username}
         for player in bench.players
-          .player.no-drag(id="player-#{player.dribbbleId}", data-dribble-id="#{player.dribbbleId}", draggable="false", data-dribbble-name="#{player.dribbbleName}")
-            .player-main
-              .player-pic
-                img.player-img(src="#{player.image}", title='#{player.name}', alt='#{player.name}', draggable='false')
-              .player-basics
-                .lead.name #{player.name}
-                .detail
-                  span.icon-location
-                  | #{player.location}
-                .buttons
-                  a.dribbble-link(href='http://dribbble.com/#{player.dribbbleName}', target='_blank') Dribbble
-                  a.twitter-link(href='http://twitter.com/#{player.twitterName}', target='_blank')
-                    span.icon-twitter
-                  a.web-link(href='#{player.websiteUrl}', target='_blank')
-                    span.icon-network
-                  a.mail-link(href='mailto: ?subject=#{player.name}&body=http://dribbble.com/#{player.dribbbleName}')
-                    span.icon-mail
-              .player-followers-count
-                .lead.followers #{player.followersCount}
-                .detail Followers
-                .buttons
-                  a.more-info-button(data-elem-id='player-#{player.dribbbleId}')
-                    span.icon-arrow-down5
-            .player-card
-              .player-card-bill.text-center(style='display: none;')
-                h3.player-card-name #{player.name}
-                h5.player-card-occupation
-                  span.icon-location
-                  | #{player.location}
-              .latest.text-center
-              table.player-card-table.pure-table
-                caption Major League Record
-                thead
-                  tr
-                    th Shots
-                    th Followers
-                    th Likes rec.
-                    th Rebounds rec.
-                    th Comments rec.
-                tbody
-                  tr
-                    td #{player.shotsCount}
-                    td #{player.followersCount}
-                    td #{player.likesReceivedCount}
-                    td #{player.reboundsReceivedCount}
-                    td #{player.commentsReceivedCount}
-              table.player-card-table.pure-table
-                thead
-                  tr
-                    th Draftees
-                    th Following
-                    th Likes
-                    th Rebounds
-                    th Comments
-                tbody
-                  tr
-                    td #{player.drafteesCount}
-                    td #{player.followingCount}
-                    td #{player.likesCount}
-                    td #{player.reboundsCount}
-                    td #{player.commentsCount}
+          if player.captain
+            include playerCard
+        for player in bench.players
+          if !player.captain
+            include playerCard

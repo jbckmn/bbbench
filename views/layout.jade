@@ -40,6 +40,10 @@ html
               a(onclick="dismissAlert(this.parentNode.parentNode);").dismiss-alert
                 span.icon-cross
               | #{error}
+    else
+      #messages(style="display:none;")
+        .wrapper
+        
     block content
 
     script(src="/socket.io/socket.io.js")

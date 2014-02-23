@@ -31,7 +31,8 @@ var Bench = new Schema({
     name: String,
     websiteUrl: String,
     benchCount: Number,
-    captain: Boolean,
+    captain: {type: Boolean, default: false},
+    updated: Date,
     dribbbleId: String}],
   image: {type: String, default: ''},
   openPublic: {type: Boolean, default: true},
@@ -117,6 +118,7 @@ Bench.statics.addPlayers = function(data, io, cb) {
       madePlayer.draftedBy = data.players[i].drafted_by_player_id;
       madePlayer.shotsCount = data.players[i].shots_count;
       madePlayer.followingCount = data.players[i].following_count;
+      madePlayer.updated = new Date;
 
       bench.players.push(madePlayer);
     }
@@ -150,6 +152,59 @@ Bench.statics.removePlayer = function(data, io, cb) {
   });
 };
 
+Bench.statics.updatePlayer = function(data, io, cb) {
+  var one = false,
+    timeAgo = ((new Date()).getTime() - (1000 * 60 * 60 * 2));
+  this.find({'players.dribbbleId': data.id}, function (err, benches) {
+    for (var i = benches.length - 1; i >= 0; i--) {
+      for (var j = benches[i].players.length - 1; j >= 0; j--) {
+        if (
+            benches[i].players[j].dribbbleId == data.id 
+            && (
+                !benches[i].players[j].updated 
+                || (
+                  new Date(benches[i].players[j].updated).getTime() < timeAgo
+                )
+              )
+          ) {
+          benches[i].players[j].name = data.name;
+          benches[i].players[j].location = data.location;
+          benches[i].players[j].url = data.url;
+          benches[i].players[j].dribbbleName = data.username;
+          benches[i].players[j].followingCount = data.following_count;
+          benches[i].players[j].followersCount = data.followers_count;
+          benches[i].players[j].drafteesCount = data.draftees_count;
+          benches[i].players[j].likesCount = data.likes_count;
+          benches[i].players[j].likesReceivedCount = data.likes_received_count;
+          benches[i].players[j].commentsCount = data.comments_count;
+          benches[i].players[j].commentsReceivedCount = data.comments_received_count;
+          benches[i].players[j].image = data.avatar_url;
+          benches[i].players[j].reboundsCount = data.rebounds_count;
+          benches[i].players[j].reboundsReceivedCount = data.reboundsReceivedCount;
+          benches[i].players[j].shotsCount = data.shots_count;
+          benches[i].players[j].websiteUrl = data.website_url;
+          benches[i].players[j].updated = new Date();
+          one = true;
+        }
+      }
+      if(one){
+        benches[i].save(function(err,result){
+          if(err){
+            console.log(err);
+            io.sockets.emit('error', {details: err});
+          }
+          if(result){
+            // io.sockets.emit('addedPlayersToBench', { requestor: data.requestor, bench: result });
+            if(cb){
+              cb(err, result);
+            }
+          }
+        });
+      }
+    }
+  });
+};
+
 Bench.statics.findPlayerBenches = function(data, io, cb) {
   this.find({'players.dribbbleName': data.dribbbleName}, function (err, benches) {
     var benchData = {
@@ -163,6 +218,67 @@ Bench.statics.findPlayerBenches = function(data, io, cb) {
       benchData.titles.push(benches[i].title);
     }
     io.sockets.emit('foundPlayerBenches', benchData);
+  });
+};
+
+Bench.statics.setCaptain = function(data, io, cb) {
+  this.findById(data.bench, function (err, bench) {
+    var benchData = {
+      dribbbleId: data.player.dribbbleId,
+      elem: data.elemId,
+      requestor: data.requestor,
+      message: data.player.name + " is now your bench's captain!"
+    };
+    for (var i = bench.players.length - 1; i >= 0; i--) {
+      if(bench.players[i].captain && (bench.players[i].dribbbleId != data.player.dribbbleId)) {
+        bench.players[i].captain = false;
+      }
+      if (bench.players[i].dribbbleId == data.player.dribbbleId) {
+        bench.players[i].captain = true;
+      }
+    }
+    bench.save(function(err,result){
+      if(err){
+        console.log(err);
+        io.sockets.emit('error', {details: err});
+      }
+      if(result){
+        benchData.bench = result;
+        io.sockets.emit('madeBenchCaptain', benchData);
+        if(cb){
+          cb(err, result);
+        }
+      }
+    });
+  });
+};
+
+Bench.statics.removeCaptain = function(data, io, cb) {
+  this.findById(data.bench, function (err, bench) {
+    var benchData = {
+      dribbbleId: data.player.dribbbleId,
+      elem: data.elemId,
+      requestor: data.requestor,
+      message: data.player.name + " is no longer your bench's captain."
+    };
+    for (var i = bench.players.length - 1; i >= 0; i--) {
+      if (bench.players[i].dribbbleId == data.player.dribbbleId) {
+        bench.players[i].captain = false;
+      }
+    }
+    bench.save(function(err,result){
+      if(err){
+        console.log(err);
+        io.sockets.emit('error', {details: err});
+      }
+      if(result){
+        benchData.bench = result;
+        io.sockets.emit('removedBenchCaptain', benchData);
+        if(cb){
+          cb(err, result);
+        }
+      }
+    });
   });
 };
 

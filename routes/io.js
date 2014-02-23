@@ -29,6 +29,13 @@ module.exports = function (app, io) {
     socket.on('setBenchCaptain', function (data) {
       Bench.setCaptain(data, io);
     });
+    socket.on('removeBenchCaptain', function (data) {
+      Bench.removeCaptain(data, io);
+    });
+
+    socket.on('updatePlayer', function (data) {
+      Bench.updatePlayer(data, io);
+    });
 
   });
 
