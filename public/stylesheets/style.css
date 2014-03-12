@@ -67,6 +67,140 @@ a:hover{
   border: none;
 }
 
+.tabletbar{
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3em;
+  z-index: 100;
+  background-color: #333;
+  color: #efefef;
+  padding: 0.5em 1em;
+}
+.tabletbar .bench-logo{
+  display: inline-block;
+  padding: 0.7em 0;
+}
+.tabletbar .bench-logo a{
+  font-size: 1.5em;
+  padding: 0 1em 0 0;
+}
+.tabletbar .bench-logo small{
+  
+}
+.tabletbar .new-bench-button{
+  display: inline-block;
+  padding: 0 0.5em 0.15em;
+  font-size: 0.8em;
+  float: right;
+  position: relative;
+  top: 0.9em;
+  right: 3em;
+}
+.tabletbar .new-bench-button.inlist{
+  display: none;
+  float: none;
+  left: 0;
+}
+.tabletbar .new-bench-button span{
+  margin: 0 0.1em 0 0;
+}
+.current-bench-button, .bench-in-list-drop, .account-dropper{
+  color: #fefefe;
+  margin: 2px 0;
+  font-size: 0.9em;
+}
+.bench-drop-wrap{
+  display: inline-block;
+  vertical-align: top;
+  float: right;
+  padding: 0 1em 0 0;
+  text-align: right;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+}
+.current-bench-button{
+  position: relative;
+  display: inline-block;
+  top: 0.75em;
+  right: 1em;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+}
+.current-bench-button:hover, .account-dropper:hover{
+  border: none;
+}
+.bench-list-drop{
+  display: none;
+  position: relative;
+  background-color: #333;
+  list-style: none;
+  padding: 0.5em 1em;
+  z-index: 10;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+  display: none;
+  border-radius: 3px;
+  opacity: 0;
+  box-shadow: 0 5px 5px rgba(0,0,0,0.5);
+}
+.bench-list-drop.active{
+  display: block;
+  opacity: 1;
+}
+.account-drop-wrap{
+  display: inline-block;
+  vertical-align: top;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+}
+.account-dropper{
+  position: relative;
+  display: inline-block;
+  top: 0.9em;
+  opacity: 0.5;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+}
+.account-drop{
+  display: none;
+  position: relative;
+  background-color: #333;
+  list-style: none;
+  padding: 0.5em 1em;
+  z-index: 10;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
+  display: none;
+  border-radius: 3px;
+  opacity: 0;
+  box-shadow: 0 5px 5px rgba(0,0,0,0.5);
+}
+.account-drop.active{
+  display: block;
+  opacity: 1;
+}
+
+.togglebar{
+  display: none;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.2);
+  position: relative;
+  z-index: 10;
+}
+.togglebar .pure-u-1-2{
+  text-align: center;
+}
+.togglebar .pure-u-1-2 a{
+  padding: 0.2em 0.5em;
+  display: block;
+  border: 2px solid #aaa;
+  border-radius: 3px;
+  margin: 0 0.5em;
+  color: #aaa;
+  background: #eee;
+}
+.togglebar .pure-u-1-2.active a{
+  color: inherit;
+  border-color: inherit;
+  background: white;
+}
+
 .bench-bar{
   height: 100vh;
   background-color: #333;
@@ -511,11 +645,62 @@ input[type="submit"]:hover{
 .margin-15{
   margin: 15px;
 }
+@media only screen and (max-width :949px){
+  body{
+    padding-top: 3.5em;
+  }
+  .desktopbar{
+    display: none;
+  }
+  .benchbar{
+    width: 50%;
+  }
+  .tabletbar{
+    display: block;
+  }
+  .workbench{
+    margin-top: 0.75em;
+  }
+  .player:last-child{
+    margin-bottom: 3.5em;
+  }
+  #following-load{
+    margin-top: 0.5em;
+  }
+}
 @media only screen and (max-width :767px){
   .title{
     font-size: 30px;
   }
   .leader{
     font-size: 1.2em;
+  }
+}
+@media only screen and (max-width :749px){
+  .benchbar{
+    width: 100%;
+    display: none;
+  }
+  .benchbar.active{
+    display: block;
+  }
+  .player-list, .work-list{
+    margin:0 2px;
+  }
+  .tabletbar{
+    font-size: 0.8em;
+  }
+  .togglebar{
+    display: block;
+    padding-bottom: 0.5em;
+  }
+  .work-actions, .player-actions, .player-heading, .work-heading{
+    margin-top: 0;
+  }
+  .tabletbar .new-bench-button{
+    display: none;
+  }
+  .tabletbar .new-bench-button.inlist{
+    display: block;
   }
 }

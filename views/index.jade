@@ -3,7 +3,38 @@ extends layout
 block content
   if user
     .pure-g.container 
-      .pure-u-1-4
+      .pure-u-1.tabletbar
+        .bench-logo
+          a(href="/", title="Home") bbbench
+        .account-drop-wrap
+          a.account-dropper.activator(data-activate="account-drop", title="Your account things") Account
+            span.icon-arrow-down4
+          ul.account-drop
+            li
+              a.settings-link(href="/settings", title="Settings Panel") Settings
+            li
+              a.signout-link(href="/sign-out", title="Sign Out") Sign Out
+        .bench-drop-wrap
+          a.current-bench-button.activator(data-activate="bench-list-drop", title="#{benches[0].description}", data-bench-id="#{benches[0]._id}") #{benches[0].title}
+            span.icon-arrow-down4
+          ul.bench-list-drop
+            each bench in benches
+              li.bench-in-list-drop
+                a.bench-link(href="##{bench._id}", title="#{bench.description}", data-bench-id="#{bench._id}") #{bench.title}
+            li.bench-in-list-drop
+              a.new-bench-button.inlist(href="/new-bench")
+                span.icon-plus3
+                | New Bench
+        a.new-bench-button(href="/new-bench")
+          span.icon-plus3
+          | New Bench
+      .pure-u-1.togglebar
+        .pure-g
+          .pure-u-1-2.active
+            a.toggle-btn.activator(data-activate="firstbar", data-deactivate="secondtbar") Workbench
+          .pure-u-1-2
+            a.toggle-btn.activator(data-activate="secondbar", data-deactivate="firstbar") Following
+      .pure-u-1-4.desktopbar
         .bench-bar
           .bench-bar-inner
             include benchHeader
@@ -18,7 +49,7 @@ block content
             br 
             a.settings-link(href="/settings", title="Settings Panel") Settings
             a.signout-link(href="/sign-out", title="Sign Out") Sign Out
-      .pure-u-3-8
+      .pure-u-3-8.benchbar.firstbar.active
         .workbench
           .pure-g
             .pure-u-1-2
@@ -36,7 +67,7 @@ block content
             a.work-sorter.sort(data-sort-by="likesReceivedCount") Most Liked
             a.work-sorter.sort(data-sort-by="followersCount") Most Followers
           .work-list.list
-      .pure-u-3-8
+      .pure-u-3-8.benchbar.secondbar
         .player-bar
           #following-load
           .pure-g
@@ -47,7 +78,7 @@ block content
               .player-actions
                 a.player-type-link.who-i-follow.active Who I Follow
                 |  | 
-                a.player-type-link.add-anyone Search All
+                a.player-type-link.add-anyone Search <span class="pure-hidden-phone">All</span>
           #players-home-list
             .player-sort
               a.player-sorter.sort(data-sort-by="name") Alphabetically
