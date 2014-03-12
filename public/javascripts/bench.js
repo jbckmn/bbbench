@@ -508,6 +508,7 @@
     evt.preventDefault();
     var id = this.dataset.benchId,
       name = this.textContent,
+      currentBtn = document.getElementsByClassName('current-bench-button')[0],
       workBench = document.getElementsByClassName('workbench')[0],
       workHeading = workBench.getElementsByClassName('work-heading')[0],
       workActions = workBench.getElementsByClassName('work-actions')[0],
@@ -522,6 +523,7 @@
     }
     classie.add(this, 'active');
     workHeading.innerHTML = daBench.title + ' (' + daBench.players.length.toString() + ')';
+    currentBtn.innerHTML = daBench.title + '<span class="icon-arrow-down4"></span>';
     workActions.style.display = 'block';
     workActions.children[0].href = '/bench/' + daBench._id;
     workActions.children[1].href = '/bench/' + daBench._id + '/edit';
