@@ -41,11 +41,12 @@
     length = btns.length,
     i = 0;
   for (; i < length; i++) {
-    btns[i].addEventListener('click', function(){
-      for(var j = 0; j < length; j++){
-        classie.toggle(btns[j].parentNode, 'active');
-      }
-    }, false);
+    btns[i].addEventListener('click', toggleActives, false);
+  }
+  function toggleActives(){
+    for(var j = 0; j < length; j++){
+      classie.toggle(btns[j].parentNode, 'active');
+    }
   }
 })(this, this.document);
 
