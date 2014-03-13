@@ -41,7 +41,10 @@
             '<div class="detail">Followers</div>',
             '<div class="buttons">',
               '<% if (!draggable) { %>',
-                '<a class="remove-button" title="remove <%= name %>" data-elem-id="<%= elemId %>"><span class="icon-cross2"></span></a>',
+                '<a class="remove-button" title="Remove <%= name %>" data-elem-id="<%= elemId %>"><span class="icon-cross2"></span></a>',
+              '<% } %>',
+              '<% if (draggable) { %>',
+                '<a class="add-button" title="Add <%= name %>" data-elem-id="<%= elemId %>"><span class="icon-plus2"></span></a>',
               '<% } %>',
               '<a class="more-info-button" data-elem-id="<%= elemId %>"><span class="icon-arrow-down5"></span></a>',
             '</div>',
@@ -161,6 +164,29 @@
     }
     bbbench.draggard = [];
   }
+  function workListAdd (evt) {
+    evt.preventDefault();
+    var dribbbleId = parseInt(document.getElementById(this.dataset.elemId).dataset.dribbbleId, 10),
+      notYet = true,
+      daBench = _.find(bbbench.benches, {'_id': document.getElementsByClassName('work-list')[0].dataset.benchId}),
+      workerPlayers = daBench.players,
+      player = _.find(bbbench.following, {'id': dribbbleId});
+    for (i = workerPlayers.length - 1; i >= 0; i--) {
+      if(parseInt(workerPlayers[i].dribbbleId, 10) == dribbbleId){
+        notYet = false;
+      }
+    }
+    if(notYet) {
+      if (player && daBench) {
+        socket.emit('addPlayersToBench', {players: [player], bench: daBench._id});
+        generalAlert({message: 'Adding ' + player.name + ' to ' + daBench.title + '.'});
+      } else{
+        generalAlert({error: 'There seems to be an error with that. Maybe you should try refreshing the page?'});
+      }
+    }else{
+      generalAlert({error: 'Already present!'});
+    }
+  }
   function playerDrag (evt) {
     bbbench.draggard = [parseInt(evt.target.dataset.dribbbleId, 10)];
   }
@@ -224,9 +250,13 @@
     }
   }
   function readyMoreInfos () {
-    var moreInfos = document.getElementsByClassName('more-info-button');
+    var moreInfos = document.getElementsByClassName('more-info-button'),
+        addBtns = document.getElementsByClassName('add-button');
     for (var i = moreInfos.length - 1; i >= 0; i--) {
       moreInfos[i].addEventListener('click', showPlayerCard, false);
+    }
+    for (i = 0; i < addBtns.length; i++) {
+      addBtns[i].addEventListener('click', workListAdd, false);
     }
   }
   function showPlayerCard (evt) {
