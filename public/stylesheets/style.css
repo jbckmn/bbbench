@@ -598,6 +598,61 @@ a:hover{
   font-weight: 700;
 }
 
+.land{}
+.land .color-bar{
+  height: 4px;
+  background: #ec4989;
+  display: block;
+}
+.land .hero-img{
+  height: 415px;
+  display: block;
+  background-attachment: scroll;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: linear-gradient(#fff, #ec4989);
+  background-image: -moz-linear-gradient(#fff, #ec4989);
+  background-image: -webkit-linear-gradient(#fff, #ec4989);
+  background-image: -o-linear-gradient(#fff, #ec4989);
+  background-image: -ms-linear-gradient(#fff, #ec4989);
+}
+.land .cta{
+  height: 345px;
+  display: block;
+  background-attachment: scroll;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.land .cta .title{
+  font-weight: 800;
+  font-size: 2em;
+  margin:2em 0 1.2em;
+}
+.land .cta .tagline{
+  font-weight: 600;
+  font-size: 1.4em;
+  color: #9aa1a6;
+}
+.land .cta .link{
+  display: inline-block;
+  color: white;
+  background-color: #ec4989;
+  font-size: 1.1em;
+  padding: 1em 2em;
+  margin: 0 0 1em;
+  border-radius: 3px;
+  transition: 1s;-moz-transition: 1s;-webkit-transition: 1s;-o-transition: 1s;
+}
+.land .cta .link:hover{
+  background-color: #8dc63f;
+  border: none;
+}
+.land .cta .sign-in{
+  display: inline-block;
+}
+
 #messages{
   position: fixed;
   background-color:rgba(0,0,0,0.5);
