@@ -657,9 +657,10 @@ a:hover{
   display: inline-block;
 }
 .land .readons {
-  max-width: 875px;
+  max-width: 895px;
   display: block;
   margin: 0 auto;
+  padding: 0 10px;
 }
 .land .reason{
   margin-bottom: 4em;
@@ -778,6 +779,21 @@ input[type="submit"]:hover{
   }
   .leader{
     font-size: 1.2em;
+  }
+  .land .reason .words{
+    padding-top: 1em;
+  }
+  .land .reason .words.left{
+    padding-right: 0;
+  }
+  .land .reason .words.right{
+    padding-left: 0;
+  }
+  .land .reason .reason-title{
+    text-align: center;
+  }
+  .land .reason .reason-text{
+    text-align: center;
   }
 }
 @media only screen and (max-width :749px){
