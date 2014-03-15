@@ -625,6 +625,10 @@ a:hover{
   background-repeat: no-repeat;
   background-size: cover;
 }
+.land .cta.flex-h{
+  height: auto;
+  padding-bottom: 10em;
+}
 .land .cta .title{
   font-weight: 800;
   font-size: 2em;
@@ -651,6 +655,45 @@ a:hover{
 }
 .land .cta .sign-in{
   display: inline-block;
+}
+.land .readons {
+  max-width: 875px;
+  display: block;
+  margin: 0 auto;
+}
+.land .reason{
+  margin-bottom: 4em;
+}
+.land .reason:last-child{
+  margin-bottom: 13em;
+}
+.land .reason .illustration{}
+.land .reason .words{
+  padding-top: 5em;
+}
+.land .reason .words.left{
+  padding-right: 10%;
+}
+.land .reason .words.right{
+  padding-left: 10%;
+}
+.land .reason .reason-title{
+  font-size: 1.4em;
+  color: #ec4989;
+  font-weight: 600;
+  margin: 1.3em 0;
+}
+.land .reason .reason-text{
+  font-size: 1em;
+  color: #9aa1a6;
+  font-weight: 500;
+  margin: 1.3em 0;
+}
+.land .copy{
+  border-top: 1px solid #ececec;
+  color: grey;
+  font-size: 0.8em;
+  padding: 2em 0;
 }
 
 #messages{
