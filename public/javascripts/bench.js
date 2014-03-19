@@ -143,6 +143,7 @@
     if (benchLinks.length > 0) {
       fakeClick(benchLinks[0]);
     }
+    bbbench.draggard = [];
   }
   updateCycle();
 
@@ -483,8 +484,7 @@
     }
   }
   function printBenchShot(shot, id, fetchingBench, workList) {
-    console.log(shot, id, fetchingBench, workList);
-    workList.innerHTML += ['<div class="player"><div class="player-card" style="display:block;"><div class="latest text-center">', latestShotTemplate({
+    workList.innerHTML += ['<div class="player no-drag"><div class="player-card" style="display:block;"><div class="latest text-center">', latestShotTemplate({
       imgLink: shot.url,
       imgTitle: shot.title,
       imgUrl: shot.image_teaser_url,
