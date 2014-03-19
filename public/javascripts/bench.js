@@ -442,6 +442,7 @@
     bbbench.gettingLatestBench = {
       _id: benchId,
       count: daBench.players.length,
+      total: daBench.players.length,
       workList: workList
     };
     bbbench.fetchedLatest = bbbench.fetchedLatest || [];
@@ -449,6 +450,7 @@
       _id: benchId, 
       shots: []
     });
+    document.getElementById('bench-load').style.height = '3px';
     for (i = 0; i < daBench.players.length; i++) {
       elemId = 'latest-' + i.toString();
       setTimeout(_.asyncRequest, i * 1100, playerShotsUrl(daBench.players[i].dribbbleId) + addendum, elemId, handleBenchLatest);
@@ -456,15 +458,20 @@
   }
   function handleBenchLatest(id, data) {
     var i,
-      fetchingBench = _.find(bbbench.fetchedList, {'_id': bbbench.gettingLatestBench._id}),
-      shot = data.shots.length > 0 ? data.shots[0] : null;
+      fetchingBench = _.find(bbbench.fetchedLatest, {'_id': bbbench.gettingLatestBench._id}),
+      shot = data.shots.length > 0 ? data.shots[0] : null,
+      benchLoad = document.getElementById('bench-load');
     if (shot) {
       fetchingBench.shots.push(shot);
       printBenchShot(shot, id, fetchingBench, bbbench.gettingLatestBench.workList);
     }
     bbbench.gettingLatestBench.count--;
-    if (bbbench.getttingLatestBench.count == 0) {
+    benchLoad.title = benchLoad.style.width = (((bbbench.gettingLatestBench.total - bbbench.gettingLatestBench.count) / (bbbench.gettingLatestBench.total * 1.0)) * 100).toString() + '%';
+    if (bbbench.gettingLatestBench.count == 0) {
       bbbench.gettingLatestBench = null;
+      benchLoad.style.backgroundColor = 'transparent';
+      benchLoad.style.width = '100%';
+      benchLoad.style.height = '0px';
     }
   }
   function printBenchLatest(daBench, benchId, workList) {

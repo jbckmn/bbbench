@@ -376,7 +376,7 @@ a:hover{
   width: 0%;
 }
 #bench-load{
-  display: none;
+  height: 0px;
 }
 
 .player-list, .work-list{
