@@ -15,6 +15,7 @@
     dribbbleId = dID.length > 0 ? dID[0].content : null,
     isHome = homeMeta.length > 0 ? true : false,
     addendum = '?per_page=30',
+    activeString = 'active',
     playerTemplate = _.template([
       '<div id="<%= elemId %>" class="player<%= draggable ?  \'\' : \' no-drag\'%>" draggable="<%= draggable.toString() %>" data-dribbble-id="<%= dribbbleId %>" data-dribbble-name="<%= username %>">',
         '<span class="likes" style="display:none;"><%= likesReceived %></span>',
@@ -100,6 +101,17 @@
           '</table>',
         '</div>',
       '</div>'
+      ].join('')),
+    latestShotTemplate = _.template([
+      '<a href="<%= imgLink %>" target="_blank" class="latest-img-link" title="<%= imgTitle %>">',
+        '<h4>Latest Shot</h4>',
+        '<span class="latest-img-wrap">',
+          '<img src="<%= imgUrl %>" class="latest-img"/>',
+          '<span class="latest-img-views"><span class="icon-eye"></span> <%= imgViews %></span>',
+          '<span class="latest-img-comments"><span class="icon-comment"></span> <%= imgComments %></span>',
+          '<span class="latest-img-likes"><span class="icon-heart"></span> <%= imgLikes %></span>',
+        '</span>',
+      '</a>'
       ].join('')),
     messageTemplate = _.template([
       '<p class="pull-center message">',
@@ -281,24 +293,25 @@
       imgLikes = enough ? data.shots[0].likes_count : '',
       imgComments = enough ? data.shots[0].comments_count : '',
       latestDiv = player.getElementsByClassName('player-card')[0].getElementsByClassName('latest')[0];
-    latestDiv.innerHTML = [
-      '<a href="', imgLink, '" target="_blank" class="latest-img-link" title="', imgTitle, '">',
-        '<h4>Latest Shot</h4>',
-        '<span class="latest-img-wrap">',
-          '<img src="', imgUrl, '" class="latest-img"/>',
-          '<span class="latest-img-views"><span class="icon-eye"></span> ', imgViews, '</span>',
-          '<span class="latest-img-comments"><span class="icon-comment"></span> ', imgComments, '</span>',
-          '<span class="latest-img-likes"><span class="icon-heart"></span> ', imgLikes, '</span>',
-        '</span>',
-      '</a>'
-      ].join('');
+    latestDiv.innerHTML = latestShotTemplate({
+      imgLink: imgLink,
+      imgTitle: imgTitle,
+      imgUrl: imgUrl,
+      imgViews: imgViews,
+      imgComments: imgComments,
+      imgLikes: imgLikes
+    });
   }
   function readySorters (playerSorters, workSorters) {
     for (var i = playerSorters.length - 1; i >= 0; i--) {
       playerSorters[i].addEventListener('click', sortPlayers, false);
     }
     for (i = workSorters.length - 1; i >= 0; i--) {
-      workSorters[i].addEventListener('click', sortWork, false);
+      if(!workSorters[i].dataset.showing) {
+        workSorters[i].addEventListener('click', sortWork, false);
+      } else {
+        workSorters[i].addEventListener('click', clickWorkListLatest, false);
+      }
     }
   }
   function compareNames (a, b) {
@@ -351,37 +364,14 @@
       tempHTML = [],
       playerSorters = document.getElementsByClassName('player-sorter');
     for (var i = playerSorters.length - 1; i >= 0; i--) {
-      classie.remove(playerSorters[i], 'active');
+      classie.remove(playerSorters[i], activeString);
     }
-    classie.remove(document.getElementsByClassName('add-anyone')[0], 'active');
-    classie.add(this, 'active');
+    classie.remove(document.getElementsByClassName('add-anyone')[0], activeString);
+    classie.add(this, activeString);
     playerLists[0].innerHTML = null;
     for (i = placeGroup.length - 1; i >= 0; i--) {
       elemId = 'players-' + i.toString();
-      tempHTML.push(playerTemplate({
-        name: placeGroup[i].name,
-        elemId: elemId,
-        draggable: true,
-        captain: false,
-        dribbbleId: placeGroup[i].id,
-        draftedBy: placeGroup[i].drafted_by_player_id,
-        image: placeGroup[i].avatar_url,
-        location: placeGroup[i].location,
-        username: placeGroup[i].username,
-        twitter: placeGroup[i].twitter_screen_name,
-        dribbbleUrl: placeGroup[i].url,
-        websiteUrl: placeGroup[i].website_url,
-        shotsCount: placeGroup[i].shots_count,
-        followersCount: placeGroup[i].followers_count,
-        followingCount: placeGroup[i].following_count,
-        commentsCount: placeGroup[i].comments_count,
-        commentsReceived: placeGroup[i].comments_received_count,
-        likesCount: placeGroup[i].likes_count,
-        likesReceived: placeGroup[i].likes_received_count,
-        reboundsCount: placeGroup[i].rebounds_count,
-        reboundsReceived: placeGroup[i].rebounds_received_count,
-        draftees: placeGroup[i].draftees_count
-      }));
+      tempHTML.push(makeAlienPlayerTemplate(placeGroup[i], elemId, true, false));
       // socket.emit('findPlayerBenches', {dribbbleName: placeGroup[i].username, requestor: userId, elem: elemId});
     }
     playerLists[0].innerHTML = tempHTML.join('');
@@ -396,43 +386,97 @@
     daBench.playerMap = createBenchMap(daBench);
     daBench.players = getSorted(this.dataset.sortBy, daBench.players, daBench.playerMap);
     for (var i = workSorters.length - 1; i >= 0; i--) {
-      classie.remove(workSorters[i], 'active');
+      classie.remove(workSorters[i], activeString);
     }
     if(workList.dataset.benchId){
-      classie.add(this, 'active');
+      classie.add(this, activeString);
       workList.innerHTML = null;
       for (i = daBench.players.length - 1; i >= 0; i--) {
         elemId = 'working-' + i.toString();
-        workList.innerHTML += playerTemplate({
-          name: daBench.players[i].name,
-          elemId: elemId,
-          draggable: false,
-          captain: daBench.players[i].captain,
-          benchCount: daBench.players[i].benchCount,
-          dribbbleId: daBench.players[i].dribbbleId,
-          draftedBy: daBench.players[i].draftedBy,
-          image: daBench.players[i].image,
-          location: daBench.players[i].location,
-          username: daBench.players[i].dribbbleName,
-          twitter: daBench.players[i].twitterName,
-          dribbbleUrl: daBench.players[i].url,
-          websiteUrl: daBench.players[i].websiteUrl,
-          shotsCount: daBench.players[i].shotsCount,
-          followersCount: daBench.players[i].followersCount,
-          followingCount: daBench.players[i].followingCount,
-          commentsCount: daBench.players[i].commentsCount,
-          commentsReceived: daBench.players[i].commentsReceivedCount,
-          likesCount: daBench.players[i].likesCount,
-          likesReceived: daBench.players[i].likesReceivedCount,
-          reboundsCount: daBench.players[i].reboundsCount,
-          reboundsReceived: daBench.players[i].reboundsReceivedCount,
-          draftees: daBench.players[i].drafteesCount
-        });
+        workList.innerHTML += makeLocalPlayerTemplate(daBench.players[i], elemId, false);
         // socket.emit('findPlayerBenches', {dribbbleName: daBench.players[i].username, requestor: userId, elem: elemId});
       }
       readyMoreInfos();
       readyRemovePlayers();
     }
+  }
+  function clickWorkListLatest (evt) {
+    evt.preventDefault();
+    var workList = document.getElementsByClassName('work-list')[0],
+      daBench = _.find(bbbench.benches, {'_id': workList.dataset.benchId}),
+      elemId,
+      workSorters = document.getElementsByClassName('work-sorter'),
+      alreadyFetched;
+    for (var i = workSorters.length - 1; i >= 0; i--) {
+      classie.remove(workSorters[i], activeString);
+    }
+    if(workList.dataset.benchId){
+      if (this.dataset.showing == 'latest') {
+        workList.innerHTML = null;
+        classie.remove(this, activeString);
+        this.innerHTML = 'Latest Shots';
+        this.dataset.showing = 'players';
+        for (i = 0; i < benchLinks.length; i++) {
+          if (benchLinks[i].dataset.benchId == workList.dataset.benchId) {
+            fakeClick(benchLinks[i]);
+          }
+        }
+      } else if (!bbbench.gettingLatestBench) {
+        workList.innerHTML = null;
+        classie.add(this, activeString);
+        this.dataset.showing = 'latest';
+        this.innerHTML = 'Latest Shots <span class="icon-cross"></span>';
+        alreadyFetched = _.find(bbbench.fetchedLatest, {'_id': daBench._id});
+        if (!alreadyFetched) {
+          fetchBenchLatest(daBench, daBench._id, workList);
+        } else {
+          printBenchLatest(daBench, daBench._id, workList);
+        }
+      } else {
+        generalAlert({error: 'It seems you are already fetching a bench\'s latest shots. Mind waiting a tick for that to finish?'});
+      }
+    }
+  }
+  function fetchBenchLatest(daBench, benchId, workList) {
+    var elemId, i;
+    bbbench.gettingLatestBench = {
+      _id: benchId,
+      count: daBench.players.length,
+      workList: workList
+    };
+    bbbench.fetchedLatest = bbbench.fetchedLatest || [];
+    bbbench.fetchedLatest.push({
+      _id: benchId, 
+      shots: []
+    });
+    for (i = 0; i < daBench.players.length; i++) {
+      elemId = 'latest-' + i.toString();
+      setTimeout(_.asyncRequest, i * 1100, playerShotsUrl(daBench.players[i].dribbbleId) + addendum, elemId, handleBenchLatest);
+    }
+  }
+  function handleBenchLatest(id, data) {
+    var i,
+      fetchingBench = _.find(bbbench.fetchedList, {'_id': bbbench.gettingLatestBench._id}),
+      shot = data.shots.length > 0 ? data.shots[0] : null;
+    if (shot) {
+      fetchingBench.shots.push(shot);
+      printBenchShot(shot, id, fetchingBench, bbbench.gettingLatestBench.workList);
+    }
+    bbbench.gettingLatestBench.count--;
+    if (bbbench.getttingLatestBench.count == 0) {
+      bbbench.gettingLatestBench = null;
+    }
+  }
+  function printBenchLatest(daBench, benchId, workList) {
+    var i, elemId,
+      fetchingBench = _.find(bbbench.fetchedList, {'_id': benchId});
+    for (i = 0; i < fetchingBench.shots.length; i++) {
+      elemId = 'latest-' + i.toString();
+      printBenchShot(fetchingBench.shots[i], elemId, fetchingBench, workList);
+    }
+  }
+  function printBenchShot(shot, id, fetchingBench, workList) {
+    console.log(shot, id, fetchingBench, workList);
   }
   function handleAnyone (evt) {
     evt.preventDefault();
@@ -440,49 +484,26 @@
       playerList = document.getElementsByClassName('player-list')[0];
     if (person!==null) {
       playerList.innerHTML = null;
-      classie.add(this, 'active');
-      classie.remove(document.getElementsByClassName('who-i-follow')[0], 'active');
+      classie.add(this, activeString);
+      classie.remove(document.getElementsByClassName('who-i-follow')[0], activeString);
       _.asyncRequest(playerInfoUrl(person) + addendum, 'info', handlePlayerInfo);
     }
   }
   function handleWhoIFollow (evt) {
     evt.preventDefault();
-    classie.add(this, 'active');
-    classie.remove(document.getElementsByClassName('add-anyone')[0], 'active');
+    classie.add(this, activeString);
+    classie.remove(document.getElementsByClassName('add-anyone')[0], activeString);
     var placeGroup = bbbench.following,
       elemId, 
       tempHTML = [],
       playerSorters = document.getElementsByClassName('player-sorter');
     for (var i = playerSorters.length - 1; i >= 0; i--) {
-      classie.remove(playerSorters[i], 'active');
+      classie.remove(playerSorters[i], activeString);
     }
     playerLists[0].innerHTML = null;
     for (i = placeGroup.length - 1; i >= 0; i--) {
       elemId = 'players-' + i.toString();
-      tempHTML.push(playerTemplate({
-        name: placeGroup[i].name,
-        elemId: elemId,
-        draggable: true,
-        captain: false,
-        dribbbleId: placeGroup[i].id,
-        draftedBy: placeGroup[i].drafted_by_player_id,
-        image: placeGroup[i].avatar_url,
-        location: placeGroup[i].location,
-        username: placeGroup[i].username,
-        twitter: placeGroup[i].twitter_screen_name,
-        dribbbleUrl: placeGroup[i].url,
-        websiteUrl: placeGroup[i].website_url,
-        shotsCount: placeGroup[i].shots_count,
-        followersCount: placeGroup[i].followers_count,
-        followingCount: placeGroup[i].following_count,
-        commentsCount: placeGroup[i].comments_count,
-        commentsReceived: placeGroup[i].comments_received_count,
-        likesCount: placeGroup[i].likes_count,
-        likesReceived: placeGroup[i].likes_received_count,
-        reboundsCount: placeGroup[i].rebounds_count,
-        reboundsReceived: placeGroup[i].rebounds_received_count,
-        draftees: placeGroup[i].draftees_count
-      }));
+      tempHTML.push(makeAlienPlayerTemplate(placeGroup[i], elemId, true, false));
       // socket.emit('findPlayerBenches', {dribbbleName: placeGroup[i].username, requestor: userId, elem: elemId});
     }
     playerLists[0].innerHTML = tempHTML.join('');
@@ -512,7 +533,7 @@
       benchLinks = document.getElementsByClassName('bench-link');
     for (var i = benchLinks.length - 1; i >= 0; i--) {
       if(benchLinks[i].dataset.benchId == benchId) {
-        classie.remove(benchLinks[i], 'active');
+        classie.remove(benchLinks[i], activeString);
       }
     }
     list.innerHTML = null;
@@ -549,9 +570,9 @@
     list.addEventListener('dragover', workListDrag, false);
     list.addEventListener('drop', workListDrop, false);
     for (var i = benchLinks.length - 1; i >= 0; i--) {
-      classie.remove(benchLinks[i], 'active');
+      classie.remove(benchLinks[i], activeString);
     }
-    classie.add(this, 'active');
+    classie.add(this, activeString);
     workHeading.innerHTML = daBench.title + ' (' + daBench.players.length.toString() + ')';
     currentBtn.innerHTML = daBench.title + '<span class="icon-arrow-down4"></span>';
     workActions.style.display = 'block';
@@ -561,31 +582,7 @@
     list.innerHTML = null;
     for (i = daBench.players.length - 1; i >= 0; i--) {
       elemId = 'working-' + i.toString();
-      list.innerHTML += playerTemplate({
-        name: daBench.players[i].name,
-        elemId: elemId,
-        draggable: false,
-        captain: daBench.players[i].captain,
-        benchCount: daBench.players[i].benchCount,
-        dribbbleId: daBench.players[i].dribbbleId,
-        draftedBy: daBench.players[i].draftedBy,
-        image: daBench.players[i].image,
-        location: daBench.players[i].location,
-        username: daBench.players[i].dribbbleName,
-        twitter: daBench.players[i].twitterName,
-        dribbbleUrl: daBench.players[i].url,
-        websiteUrl: daBench.players[i].websiteUrl,
-        shotsCount: daBench.players[i].shotsCount,
-        followersCount: daBench.players[i].followersCount,
-        followingCount: daBench.players[i].followingCount,
-        commentsCount: daBench.players[i].commentsCount,
-        commentsReceived: daBench.players[i].commentsReceivedCount,
-        likesCount: daBench.players[i].likesCount,
-        likesReceived: daBench.players[i].likesReceivedCount,
-        reboundsCount: daBench.players[i].reboundsCount,
-        reboundsReceived: daBench.players[i].reboundsReceivedCount,
-        draftees: daBench.players[i].drafteesCount
-      });
+      list.innerHTML += makeLocalPlayerTemplate(daBench.players[i], elemId, false);
       // socket.emit('findPlayerBenches', {dribbbleName: daBench.players[i].username, requestor: userId, elem: elemId});
     }
     readyMoreInfos();
@@ -598,30 +595,7 @@
     if (data.message) {
       playerLists[0].innerHTML += '<h3>' + data.message.toString() + '</h3>';
     } else {
-      playerLists[0].innerHTML += playerTemplate({
-        name: data.name,
-        elemId: elemId,
-        draggable: true,
-        captain: false,
-        dribbbleId: data.id,
-        draftedBy: data.drafted_by_player_id,
-        image: data.avatar_url,
-        location: data.location,
-        username: data.username,
-        twitter: data.twitter_screen_name,
-        dribbbleUrl: data.url,
-        websiteUrl: data.website_url,
-        shotsCount: data.shots_count,
-        followersCount: data.followers_count,
-        followingCount: data.following_count,
-        commentsCount: data.comments_count,
-        commentsReceived: data.comments_received_count,
-        likesCount: data.likes_count,
-        likesReceived: data.likes_received_count,
-        reboundsCount: data.rebounds_count,
-        reboundsReceived: data.rebounds_received_count,
-        draftees: data.draftees_count
-      });
+      playerLists[0].innerHTML += makeAlienPlayerTemplate(data, elemId, true, false);
       // socket.emit('findPlayerBenches', {dribbbleName: data.players[i].username, requestor: userId, elem: elemId});
       for (i = playerLists[0].children.length - 1; i >= 0; i--) {
         playerLists[0].children[i].addEventListener('drag', playerDrag, false);
@@ -647,31 +621,7 @@
       list.innerHTML = null;
       for (i = daBench.players.length - 1; i >= 0; i--) {
         elemId = 'working-' + i.toString();
-        list.innerHTML += playerTemplate({
-          name: daBench.players[i].name,
-          elemId: elemId,
-          draggable: false,
-          captain: daBench.players[i].captain,
-          benchCount: daBench.players[i].benchCount,
-          dribbbleId: daBench.players[i].dribbbleId,
-          draftedBy: daBench.players[i].draftedBy,
-          image: daBench.players[i].image,
-          location: daBench.players[i].location,
-          username: daBench.players[i].dribbbleName,
-          twitter: daBench.players[i].twitterName,
-          dribbbleUrl: daBench.players[i].url,
-          websiteUrl: daBench.players[i].websiteUrl,
-          shotsCount: daBench.players[i].shotsCount,
-          followersCount: daBench.players[i].followersCount,
-          followingCount: daBench.players[i].followingCount,
-          commentsCount: daBench.players[i].commentsCount,
-          commentsReceived: daBench.players[i].commentsReceivedCount,
-          likesCount: daBench.players[i].likesCount,
-          likesReceived: daBench.players[i].likesReceivedCount,
-          reboundsCount: daBench.players[i].reboundsCount,
-          reboundsReceived: daBench.players[i].reboundsReceivedCount,
-          draftees: daBench.players[i].drafteesCount
-        });
+        list.innerHTML += makeLocalPlayerTemplate(daBench.players[i], elemId, false);
         // socket.emit('findPlayerBenches', {dribbbleName: daBench.players[i].username, requestor: userId, elem: elemId});
       }
       readyMoreInfos();
@@ -682,33 +632,10 @@
     var elemId, dumbArray = [],
       followingLoad = document.getElementById('following-load'),
       playerHeading = document.getElementsByClassName('player-heading')[0];
-    followingLoad.style.width = ((parseInt(data.page, 10) / parseFloat(data.pages)) * 100).toString() + '%';
+    followingLoad.title = followingLoad.style.width = ((parseInt(data.page, 10) / parseFloat(data.pages)) * 100).toString() + '%';
     for (i = data.players.length - 1; i >= 0; i--) {
       elemId = 'players-' + i.toString();
-      dumbArray.push(playerTemplate({
-        name: data.players[i].name,
-        elemId: elemId,
-        draggable: true,
-        captain: false,
-        dribbbleId: data.players[i].id,
-        draftedBy: data.players[i].drafted_by_player_id,
-        image: data.players[i].avatar_url,
-        location: data.players[i].location,
-        username: data.players[i].username,
-        twitter: data.players[i].twitter_screen_name,
-        dribbbleUrl: data.players[i].url,
-        websiteUrl: data.players[i].website_url,
-        shotsCount: data.players[i].shots_count,
-        followersCount: data.players[i].followers_count,
-        followingCount: data.players[i].following_count,
-        commentsCount: data.players[i].comments_count,
-        commentsReceived: data.players[i].comments_received_count,
-        likesCount: data.players[i].likes_count,
-        likesReceived: data.players[i].likes_received_count,
-        reboundsCount: data.players[i].rebounds_count,
-        reboundsReceived: data.players[i].rebounds_received_count,
-        draftees: data.players[i].draftees_count
-      }));
+      dumbArray.push(makeAlienPlayerTemplate(data.players[i], elemId, true, false));
       // socket.emit('findPlayerBenches', {dribbbleName: data.players[i].username, requestor: userId, elem: elemId});
       data.players[i].elemId = elemId;
       socket.emit('updatePlayer', data.players[i]);
@@ -730,6 +657,59 @@
       playerHeading.innerHTML = bbbench.following.length.toString() + ' Players';
       bbbench.followingMap = bbbench.followingMap || createFollowingMap();
     }
+  }
+  function makeLocalPlayerTemplate(data, elem, draggable) {
+    return playerTemplate({
+      name: data.name,
+      elemId: elem,
+      draggable: draggable,
+      captain: data.captain,
+      benchCount: data.benchCount,
+      dribbbleId: data.dribbbleId,
+      draftedBy: data.draftedBy,
+      image: data.image,
+      location: data.location,
+      username: data.dribbbleName,
+      twitter: data.twitterName,
+      dribbbleUrl: data.url,
+      websiteUrl: data.websiteUrl,
+      shotsCount: data.shotsCount,
+      followersCount: data.followersCount,
+      followingCount: data.followingCount,
+      commentsCount: data.commentsCount,
+      commentsReceived: data.commentsReceivedCount,
+      likesCount: data.likesCount,
+      likesReceived: data.likesReceivedCount,
+      reboundsCount: data.reboundsCount,
+      reboundsReceived: data.reboundsReceivedCount,
+      draftees: data.drafteesCount
+    });
+  }
+  function makeAlienPlayerTemplate(data, elem, draggable, captain) {
+    return playerTemplate({
+      name: data.name,
+      elemId: elem,
+      draggable: draggable,
+      captain: captain,
+      dribbbleId: data.id,
+      draftedBy: data.drafted_by_player_id,
+      image: data.avatar_url,
+      location: data.location,
+      username: data.username,
+      twitter: data.twitter_screen_name,
+      dribbbleUrl: data.url,
+      websiteUrl: data.website_url,
+      shotsCount: data.shots_count,
+      followersCount: data.followers_count,
+      followingCount: data.following_count,
+      commentsCount: data.comments_count,
+      commentsReceived: data.comments_received_count,
+      likesCount: data.likes_count,
+      likesReceived: data.likes_received_count,
+      reboundsCount: data.rebounds_count,
+      reboundsReceived: data.rebounds_received_count,
+      draftees: data.draftees_count
+    });
   }
   function handlePlayerBenches (data) {
     var players = document.getElementsByClassName('player');

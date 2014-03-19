@@ -51,6 +51,7 @@ block content
             a.signout-link(href="/sign-out", title="Sign Out") Sign Out
       .pure-u-3-8.benchbar.firstbar.active
         .workbench
+          #bench-load
           .pure-g
             .pure-u-1-2
               h2.work-heading
@@ -63,6 +64,7 @@ block content
                 a.close-work(title="Close bench")
                   span.icon-cross
           .work-sort
+            a.work-sorter.latest-bench-toggle(data-showing="players") Latest Shots
             a.work-sorter.sort(data-sort-by="name") Alphabetically
             a.work-sorter.sort(data-sort-by="likesReceivedCount") Most Liked
             a.work-sorter.sort(data-sort-by="followersCount") Most Followers
@@ -81,6 +83,8 @@ block content
                 a.player-type-link.add-anyone Search <span class="pure-hidden-phone">All</span>
           #players-home-list
             .player-sort
+              if false
+                a.player-sorter.latest-following-toggle(data-showing="players") Latest Shots
               a.player-sorter.sort(data-sort-by="name") Alphabetically
               a.player-sorter.sort(data-sort-by="likesReceivedCount") Most Liked
               a.player-sorter.sort(data-sort-by="followersCount") Most Followers

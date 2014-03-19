@@ -344,6 +344,11 @@ a:hover{
   opacity: 1;
   border-bottom-color: #333;
 }
+.latest-bench-toggle, .latest-following-toggle{
+  float: left;
+  line-height: 1.5em;
+  padding-top: 0.6em;
+}
 
 .player-bar{
   height: 100vh;
@@ -364,11 +369,14 @@ a:hover{
   cursor: pointer;
   border: none;
 }
-#following-load{
+#following-load, #bench-load{
   background-color: #ea4c89;
   height: 3px;
   transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
   width: 0%;
+}
+#bench-load{
+  display: none;
 }
 
 .player-list, .work-list{

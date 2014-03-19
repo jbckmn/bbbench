@@ -11,7 +11,7 @@ block content
         legend #{title}
         fieldset#settings-fields
           .pure-control-group
-            label(for="dribbble") dribbble username
+            label(for="dribbble") Dribbble username
             input(type="text", name="dribbble", placeholder="dribbble username", value="#{user.dribbble || ''}")
           .pure-control-group
             label(for="username") Name
@@ -31,3 +31,5 @@ block content
           .pure-controls
             input(type="submit", value="Update")
     .pure-u-3-8
+  script.
+    var bbbench = bbbench || {};
