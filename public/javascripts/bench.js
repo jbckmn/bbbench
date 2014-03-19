@@ -467,16 +467,15 @@
     }
     bbbench.gettingLatestBench.count--;
     benchLoad.title = benchLoad.style.width = (((bbbench.gettingLatestBench.total - bbbench.gettingLatestBench.count) / (bbbench.gettingLatestBench.total * 1.0)) * 100).toString() + '%';
-    if (bbbench.gettingLatestBench.count == 0) {
+    if (bbbench.gettingLatestBench.count === 0) {
       bbbench.gettingLatestBench = null;
-      benchLoad.style.backgroundColor = 'transparent';
       benchLoad.style.width = '100%';
       benchLoad.style.height = '0px';
     }
   }
   function printBenchLatest(daBench, benchId, workList) {
     var i, elemId,
-      fetchingBench = _.find(bbbench.fetchedList, {'_id': benchId});
+      fetchingBench = _.find(bbbench.fetchedLatest, {'_id': benchId});
     for (i = 0; i < fetchingBench.shots.length; i++) {
       elemId = 'latest-' + i.toString();
       printBenchShot(fetchingBench.shots[i], elemId, fetchingBench, workList);
