@@ -1,5 +1,6 @@
 {
   "name": "bbbench",
+  "tagline": "Artist Bookmarking",
   "status": {
     "500": {
       "code": 500,

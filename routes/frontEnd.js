@@ -15,7 +15,7 @@ module.exports = function (app, ensureAuth, io) {
       if (req.user.dribbble) {
         Bench.find({userId: req.user._id}).lean().exec(function(err, benches) {
           if (benches.length > 0) {
-            res.render('index', { title: config.name,
+            res.render('index', { title: [config.name, config.tagline].join(' | '),
                               user: req.user,
                               isHome: true,
                               req: req,
@@ -32,7 +32,7 @@ module.exports = function (app, ensureAuth, io) {
         res.redirect('/settings');
       }
     } else {
-      res.render('index', { title: config.name,
+      res.render('index', { title: [config.name, config.tagline].join(' | '),
                             user: req.user,
                             req: req,
                             message: req.flash('message'), 
@@ -76,7 +76,7 @@ module.exports = function (app, ensureAuth, io) {
             res.redirect('/');
             console.log(err);
           }
-          res.render('bench', { title: bench.title,
+          res.render('bench', { title: [bench.title, config.name].join(' | '),
                               user: req.user,
                               owner: owner,
                               bench: bench,

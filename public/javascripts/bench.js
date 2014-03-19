@@ -104,7 +104,7 @@
       ].join('')),
     latestShotTemplate = _.template([
       '<a href="<%= imgLink %>" target="_blank" class="latest-img-link" title="<%= imgTitle %>">',
-        '<h4>Latest Shot</h4>',
+        '<h4><%= title %></h4>',
         '<span class="latest-img-wrap">',
           '<img src="<%= imgUrl %>" class="latest-img"/>',
           '<span class="latest-img-views"><span class="icon-eye"></span> <%= imgViews %></span>',
@@ -299,7 +299,8 @@
       imgUrl: imgUrl,
       imgViews: imgViews,
       imgComments: imgComments,
-      imgLikes: imgLikes
+      imgLikes: imgLikes,
+      title: 'Latest Shot: ' + imgTitle
     });
   }
   function readySorters (playerSorters, workSorters) {
@@ -483,6 +484,15 @@
   }
   function printBenchShot(shot, id, fetchingBench, workList) {
     console.log(shot, id, fetchingBench, workList);
+    workList.innerHTML += ['<div class="player"><div class="player-card" style="display:block;"><div class="latest text-center">', latestShotTemplate({
+      imgLink: shot.url,
+      imgTitle: shot.title,
+      imgUrl: shot.image_teaser_url,
+      imgViews: shot.views_count,
+      imgComments: shot.comments_count,
+      imgLikes: shot.likes_count,
+      title: shot.title + ' | ' + shot.player.name
+    }), '</div></div></div>'].join('');
   }
   function handleAnyone (evt) {
     evt.preventDefault();
