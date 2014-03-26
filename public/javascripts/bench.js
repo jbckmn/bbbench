@@ -104,12 +104,14 @@
       ].join('')),
     latestShotTemplate = _.template([
       '<a href="<%= imgLink %>" target="_blank" class="latest-img-link" title="<%= imgTitle %>">',
-        '<h4><%= title %></h4>',
+        '<h4 class="text-center"><%= title %></h4>',
         '<span class="latest-img-wrap">',
           '<img src="<%= imgUrl %>" class="latest-img"/>',
-          '<span class="latest-img-views"><span class="icon-eye"></span> <%= imgViews %></span>',
-          '<span class="latest-img-comments"><span class="icon-comment"></span> <%= imgComments %></span>',
-          '<span class="latest-img-likes"><span class="icon-heart"></span> <%= imgLikes %></span>',
+          '<span class="latest-img-footer">',
+            '<span class="latest-img-views"><span class="icon-eye"></span> <%= imgViews %></span>',
+            '<span class="latest-img-comments"><span class="icon-comment"></span> <%= imgComments %></span>',
+            '<span class="latest-img-likes"><span class="icon-heart"></span> <%= imgLikes %></span>',
+          '</span>',
         '</span>',
       '</a>'
       ].join('')),
@@ -287,7 +289,7 @@
   function handlePlayerLatest (id, data) {
     var player = document.getElementById(id),
       enough = (data.shots.length > 0),
-      imgUrl = enough ? data.shots[0].image_teaser_url : '',
+      imgUrl = enough ? data.shots[0].image_url : '',
       imgLink = enough ? data.shots[0].url : '',
       imgTitle = enough ? data.shots[0].title : '',
       imgViews = enough ? data.shots[0].views_count : '',
@@ -484,15 +486,15 @@
     }
   }
   function printBenchShot(shot, id, fetchingBench, workList) {
-    workList.innerHTML += ['<div class="player no-drag"><div class="player-card" style="display:block;"><div class="latest text-center">', latestShotTemplate({
+    workList.innerHTML += latestShotTemplate({
       imgLink: shot.url,
       imgTitle: shot.title,
-      imgUrl: shot.image_teaser_url,
+      imgUrl: shot.image_url,
       imgViews: shot.views_count,
       imgComments: shot.comments_count,
       imgLikes: shot.likes_count,
       title: shot.title + ' | ' + shot.player.name
-    }), '</div></div></div>'].join('');
+    });
   }
   function handleAnyone (evt) {
     evt.preventDefault();

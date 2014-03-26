@@ -4,7 +4,7 @@ body {
   font-family: 'Open Sans', Helvetica, sans-serif;
   font-weight: 600;
   background: white;
-  color: #333;
+  color: #2e393c;
 }
 body *{
   box-sizing:border-box;
@@ -75,7 +75,7 @@ a:hover{
   right: 0;
   height: 3em;
   z-index: 100;
-  background-color: #333;
+  background-color: #3b474a;
   color: #efefef;
   padding: 0.5em 1em;
 }
@@ -131,7 +131,7 @@ a:hover{
 .bench-list-drop{
   display: none;
   position: relative;
-  background-color: #333;
+  background-color: #3b474a;
   list-style: none;
   padding: 0.5em 1em;
   z-index: 10;
@@ -160,7 +160,7 @@ a:hover{
 .account-drop{
   display: none;
   position: relative;
-  background-color: #333;
+  background-color: #3b474a;
   list-style: none;
   padding: 0.5em 1em;
   z-index: 10;
@@ -201,7 +201,7 @@ a:hover{
 
 .bench-bar{
   height: 100vh;
-  background-color: #333;
+  background-color: #3b474a;
   color: #efefef;
   overflow: scroll;
 }
@@ -289,7 +289,7 @@ a:hover{
   margin: 20px 15px 15px 0;
 }
 .share-work{
-  color: #333;
+  color: #2e393c;
   font-size: 0.6em;
   background-color: #ddd;
   opacity: 0.6;
@@ -309,7 +309,7 @@ a:hover{
   border: none;
 }
 .edit-work{
-  color: #333;
+  color: #2e393c;
   font-weight: 700;
   font-size: 1.25em;
   position: relative;
@@ -321,7 +321,7 @@ a:hover{
   border: none;
 }
 .close-work{
-  color: #333;
+  color: #2e393c;
   font-weight: 700;
   font-size: 1.5em;
 }
@@ -333,16 +333,16 @@ a:hover{
 .work-sorter, .player-sorter{
   font-size: 0.65em;
   font-weight: 700;
-  color: #333;
+  color: #2e393c;
   opacity: 0.5;
   margin: 0 5px;
   border-bottom: 2px solid #eee;
   padding-bottom: 4px;
 }
 .work-sorter.active, .player-sorter.active{
-  color: #333;
+  color: #2e393c;
   opacity: 1;
-  border-bottom-color: #333;
+  border-bottom-color: #2e393c;
 }
 .latest-bench-toggle, .latest-following-toggle{
   float: left;
@@ -362,7 +362,7 @@ a:hover{
   font-size: 0.9em;
 }
 .player-type-link.active{
-  color: #333;
+  color: #2e393c;
   font-weight: 700;
 }
 .player-type-link.active:hover{
@@ -497,7 +497,7 @@ a:hover{
   font-weight: 700;
 }
 .player-basics .twitter-link{
-  color: #333;
+  color: #2e393c;
   background-color: #e1e1e1;
   padding:3px 4px 0px;
   border-radius: 2px;
@@ -507,7 +507,7 @@ a:hover{
   margin: 0 4px 0 6px;
 }
 .player-basics .mail-link{
-  color: #333;
+  color: #2e393c;
   background-color: #e1e1e1;
   padding:3px 4px 0px;
   border-radius: 2px;
@@ -516,7 +516,7 @@ a:hover{
   top:3px;
 }
 .player-basics .web-link{
-  color: #333;
+  color: #2e393c;
   background-color: #e1e1e1;
   padding:3px 4px 0px;
   margin-right: 4px;
@@ -532,7 +532,7 @@ a:hover{
   color: #55acee;
 }
 .player-followers-count .more-info-button, .player-followers-count .remove-button, .player-followers-count .add-button{
-  color: #333;
+  color: #2e393c;
   background-color: white;
   padding:3px 4px 0px;
   border-radius: 2px;
@@ -558,16 +558,27 @@ a:hover{
 .player-card{
   display: none;
 }
-.player-card .latest-img-link{
+.latest-img-link{
   display: inline-block;
   color:#222;
+  margin:0.25em;
 }
-.player-card .latest-img-link:hover{
+.latest-img-link:hover{
   border: none;
 }
-.player-card .latest-img-link h4{
+.latest-img-link:hover h4, .latest-img-link:hover .latest-img-footer{
+  opacity: 1;
+}
+.latest-img-link h4{
   font-weight: 700;
-  color:#222;
+  color: #222;
+  margin: -3.5em 2px 1em;
+  padding: 0.5em 0;
+  position: relative;
+  bottom: -4em;
+  background: rgba(255,255,255,0.75);
+  opacity: 0;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
 }
 .latest-img-wrap{
   font-size: 0.8em;
@@ -576,10 +587,21 @@ a:hover{
   padding: 1em 1em 0.5em;
   border:1px solid #eee;
   border-radius: 4px;
+  background: white;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
 }
 .latest-img{
   display: block;
-  margin-bottom: 0.5em;
+  margin-bottom: -0.5em;
+  max-width: 100%;
+}
+.latest-img-footer{
+  display: block;
+  background: rgba(255,255,255,0.75);
+  position: relative;
+  top: -1em;
+  opacity: 0;
+  transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
 }
 .latest-img-wrap .latest-img-views, .latest-img-wrap .latest-img-comments, .latest-img-wrap .latest-img-likes{
   opacity: 0.5;
@@ -590,6 +612,18 @@ a:hover{
   position: relative;
   top: 1px;
 }
+.player-card .latest-img-link{
+  margin-top: 2em;
+}
+.player-card .latest-img-link h4{
+  margin-top: -4.5em;
+  padding: 1em 0;
+}
+.player-card .latest-img-footer{
+  margin-bottom: -1em;
+  padding: 0.5em 0;
+}
+
 .player-card-table{
   width: 100%;
   margin:10px 0 5px;
