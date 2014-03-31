@@ -326,7 +326,7 @@ a:hover{
   font-size: 1.5em;
 }
 .work-sort, .player-sort{
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid #ddd;
   margin: 0 15px 0;
   text-align: right;
 }
@@ -335,9 +335,9 @@ a:hover{
   font-weight: 700;
   color: #2e393c;
   opacity: 0.5;
-  margin: 0 5px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 4px;
+  margin: 0;
+  border-bottom: 2px solid #ddd;
+  padding: 0 5px 3px;
 }
 .work-sorter.active, .player-sorter.active{
   color: #2e393c;
@@ -353,7 +353,7 @@ a:hover{
 .player-bar{
   height: 100vh;
   overflow: scroll;
-  background-color: #fafafa;
+  background-color: rgba(59,71,74, 0.1);
 }
 .player-actions{
   margin-bottom: 25px;
