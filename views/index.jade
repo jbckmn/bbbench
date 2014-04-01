@@ -51,7 +51,6 @@ block content
             a.signout-link(href="/sign-out", title="Sign Out") Sign Out
       .pure-u-3-8.benchbar.firstbar.active
         .workbench
-          #bench-load
           .pure-g
             .pure-u-1-2
               h2.work-heading
@@ -89,6 +88,22 @@ block content
               a.player-sorter.sort(data-sort-by="likesReceivedCount") Most Liked
               a.player-sorter.sort(data-sort-by="followersCount") Most Followers
             .player-list.list
+      .pure-u-3-4.widebar
+        .pure-g-r
+          .pure-u-2-3
+            h2.latest-heading
+              span.muted Select a bench
+            p.latest-desc
+          .pure-u-1-3
+            a.edit-latest Edit
+            h3.share-latest Share this bench!
+              a.twitter-latest(href="#")  
+                span.icon-twitter
+              a.facebook-latest(href="#")
+                span.icon-facebook
+        .latest-grid-wrap
+          #bench-load
+          #latest-grid
     script.
       var bbbench = bbbench || {}; bbbench.benches = !{JSON.stringify(benches)};
   else

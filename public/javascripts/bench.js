@@ -130,10 +130,12 @@
   bbbench.uid = userId;
   bbbench.dribbbleId = dribbbleId;
   bbbench.following = [];
+  bbbench.loadedFollowing = false;
+  bbbench.draggard = [];
 
 // logic
   if (dribbbleId && userId && isHome) {
-    _.asyncRequest(playerFollowingUrl(dribbbleId) + addendum, dribbbleId, handlePlayerFollowing);
+    // _.asyncRequest(playerFollowingUrl(dribbbleId) + addendum, dribbbleId, handlePlayerFollowing);
     socket.on('foundPlayerBenches', handlePlayerBenches);
     socket.on('addedPlayersToBench', handlePlayerAdded);
     socket.on('madeBenchCaptain', generalAlert);
@@ -145,7 +147,6 @@
     if (benchLinks.length > 0) {
       fakeClick(benchLinks[0]);
     }
-    bbbench.draggard = [];
   }
   updateCycle();
 
@@ -405,31 +406,28 @@
     }
   }
   function clickWorkListLatest (evt) {
-    evt.preventDefault();
-    var workList = document.getElementsByClassName('work-list')[0],
+    if (evt) {
+      evt.preventDefault();
+    }
+    var workList = document.getElementById('latest-grid'),
       daBench = _.find(bbbench.benches, {'_id': workList.dataset.benchId}),
-      elemId,
-      workSorters = document.getElementsByClassName('work-sorter'),
-      alreadyFetched;
-    for (var i = workSorters.length - 1; i >= 0; i--) {
-      classie.remove(workSorters[i], activeString);
+      elemId, 
+      i,
+      alreadyFetched,
+      benchbars = document.getElementsByClassName('benchbar'),
+      widebars = document.getElementsByClassName('widebar'),
+      bgArray = ['bbbuildingsbbblur', 'bbbrickbbblur', 'bbboardsbbblur'],
+      randBg = bgArray[Math.round(Math.random() * (bgArray.length - 1))];
+    for (i = benchbars.length - 1; i >= 0; i--) {
+      benchbars[i].style.display = 'none';
+    }
+    for (i = widebars.length - 1; i >= 0; i--) {
+      widebars[i].style.display = 'inline-block';
+      widebars[i].style.backgroundImage = "url('/images/" + randBg + ".jpg')";
     }
     if(workList.dataset.benchId){
-      if (this.dataset.showing == 'latest') {
+      if (!bbbench.gettingLatestBench) {
         workList.innerHTML = null;
-        classie.remove(this, activeString);
-        this.innerHTML = 'Latest Shots';
-        this.dataset.showing = 'players';
-        for (i = 0; i < benchLinks.length; i++) {
-          if (benchLinks[i].dataset.benchId == workList.dataset.benchId) {
-            fakeClick(benchLinks[i]);
-          }
-        }
-      } else if (!bbbench.gettingLatestBench) {
-        workList.innerHTML = null;
-        classie.add(this, activeString);
-        this.dataset.showing = 'latest';
-        this.innerHTML = 'Latest Shots <span class="icon-cross"></span>';
         alreadyFetched = _.find(bbbench.fetchedLatest, {'_id': daBench._id});
         if (!alreadyFetched) {
           fetchBenchLatest(daBench, daBench._id, workList);
@@ -530,11 +528,15 @@
   }
   function readyBenchLinks (benchLinks) {
     var closeWork = document.getElementsByClassName('close-work')[0],
-      shareWork = document.getElementsByClassName('share-work')[0];
+      shareWork = document.getElementsByClassName('share-work')[0],
+      editLatest = document.getElementsByClassName('edit-latest')[0],
+      showLatest = document.getElementsByClassName('latest-bench-toggle')[0];
     for (var i = benchLinks.length - 1; i >= 0; i--) {
       benchLinks[i].addEventListener('click', readyWorkBench, false);
     }
     closeWork.addEventListener('click', closeWorkBench, false);
+    editLatest.addEventListener('click', switchEditBench, false);
+    showLatest.addEventListener('click', clickWorkListLatest, false);
     // shareWork.addEventListener('click', shareWorkBench, false);
   }
   function shareWorkBench (evt) {
@@ -573,6 +575,33 @@
       // for you. However every other browser will.
     }
   }
+  function switchEditBench (evt) {
+    evt.preventDefault();
+    var benchbars = document.getElementsByClassName('benchbar'),
+      widebars = document.getElementsByClassName('widebar'),
+      i;
+    for (i = benchbars.length - 1; i >= 0; i--) {
+      benchbars[i].style.display = 'inline-block';
+    }
+    for (i = widebars.length - 1; i >= 0; i--) {
+      widebars[i].style.display = 'none';
+    }
+    if (!bbbench.loadedFollowing) {
+      _.asyncRequest(playerFollowingUrl(dribbbleId) + addendum, dribbbleId, handlePlayerFollowing);
+    }
+  }
+  function switchBenchLatest (evt) {
+    evt.preventDefault();
+    var benchbars = document.getElementsByClassName('benchbar'),
+      widebars = document.getElementsByClassName('widebar'),
+      i;
+    for (i = benchbars.length - 1; i >= 0; i--) {
+      benchbars[i].style.display = 'none';
+    }
+    for (i = widebars.length - 1; i >= 0; i--) {
+      widebars[i].style.display = 'inline-block';
+    }
+  }
   function readyWorkBench (evt) {
     evt.preventDefault();
     var id = this.dataset.benchId,
@@ -580,23 +609,28 @@
       currentBtn = document.getElementsByClassName('current-bench-button')[0],
       workBench = document.getElementsByClassName('workbench')[0],
       workHeading = workBench.getElementsByClassName('work-heading')[0],
+      latestHeading = document.getElementsByClassName('latest-heading')[0],
+      latestDesc = document.getElementsByClassName('latest-desc')[0],
       workActions = workBench.getElementsByClassName('work-actions')[0],
       benchLinks = document.getElementsByClassName('bench-link'),
       list = workBench.getElementsByClassName('work-list')[0],
+      latestGrid = document.getElementById('latest-grid'),
       daBench = _.find(bbbench.benches, {'_id': id}),
       elemId;
+    latestGrid.dataset.benchId = list.dataset.benchId = daBench._id;
+    clickWorkListLatest();
     list.addEventListener('dragover', workListDrag, false);
     list.addEventListener('drop', workListDrop, false);
     for (var i = benchLinks.length - 1; i >= 0; i--) {
       classie.remove(benchLinks[i], activeString);
     }
     classie.add(this, activeString);
-    workHeading.innerHTML = daBench.title + ' (' + daBench.players.length.toString() + ')';
+    latestHeading.innerHTML = workHeading.innerHTML = daBench.title + ' (' + daBench.players.length.toString() + ')';
+    latestDesc.textContent = daBench.description;
     currentBtn.innerHTML = daBench.title + '<span class="icon-arrow-down4"></span>';
     workActions.style.display = 'block';
     workActions.children[0].href = '/bench/' + daBench._id;
     workActions.children[1].href = '/bench/' + daBench._id + '/edit';
-    list.dataset.benchId = daBench._id;
     list.innerHTML = null;
     for (i = daBench.players.length - 1; i >= 0; i--) {
       elemId = 'working-' + i.toString();
@@ -650,6 +684,7 @@
     var elemId, dumbArray = [],
       followingLoad = document.getElementById('following-load'),
       playerHeading = document.getElementsByClassName('player-heading')[0];
+    bbbench.loadedFollowing = true;
     followingLoad.title = followingLoad.style.width = ((parseInt(data.page, 10) / parseFloat(data.pages)) * 100).toString() + '%';
     for (i = data.players.length - 1; i >= 0; i--) {
       elemId = 'players-' + i.toString();

@@ -604,7 +604,7 @@ a:hover{
   transition: 0.3s;-moz-transition: 0.3s;-webkit-transition: 0.3s;-o-transition: 0.3s;
 }
 .latest-img-wrap .latest-img-views, .latest-img-wrap .latest-img-comments, .latest-img-wrap .latest-img-likes{
-  opacity: 0.5;
+  opacity: 0.8;
   margin-left: 0.75em;
   display: inline-block;
 }
@@ -640,6 +640,78 @@ a:hover{
 .player-card-table caption{
   font:inherit;
   font-weight: 700;
+}
+
+.widebar{
+  background-attachment: scroll;
+  background-position: center top;
+  color: white;
+  background-size: contain;
+  height: 100vh;
+  overflow-y:scroll;
+}
+.latest-heading{
+  margin-left: 16px;
+}
+.latest-desc{
+  margin-left: 16px;
+}
+.share-latest{
+  background: rgba(255,255,255,0.75);
+  margin: 30px 16px;
+  padding: 5px 5px 5px 10px;
+  color: #555;
+  font-weight: 600;
+  border-radius: 3px;
+  font-size: 14px;
+  display: inline-block;
+}
+.edit-latest{
+  background: rgba(255,255,255,0.75);
+  margin: 0 -10px 0 0;
+  padding: 8px 7px 5px 9px;
+  color: #555;
+  font-weight: 600;
+  border-radius: 3px;
+  font-size: 14px;
+  display: inline-block;
+}
+.edit-latest:hover{
+  border: none;
+}
+.twitter-latest{
+  color: white;
+  background: rgb(85, 172, 238);
+  padding: 0.2em 0.75em 0.05em;
+  margin: 0px 2px;
+  display: inline-block;
+  margin-left: 10px;
+  border-radius: 2px;
+}
+.facebook-latest{
+  color: white;
+  background: #3B5998;
+  padding: 0.2em 0.75em 0.05em;
+  margin: 0px 2px;
+  display: inline-block;
+  border-radius: 2px;
+}
+.twitter-latest:hover, .facebook-latest:hover{
+  border: none;
+}
+.latest-grid-wrap{
+  background: white;
+  min-height: 75vh;
+}
+#latest-grid{
+  text-align: center;
+}
+#latest-grid a.latest-img-link{
+  width: 33%;
+  margin: 1px 0;
+}
+#latest-grid .latest-img-wrap{
+  border: none;
 }
 
 .land{}
