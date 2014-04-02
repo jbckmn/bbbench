@@ -126,6 +126,12 @@
         '<a onclick="dismissAlert(this.parentNode.parentNode);" class="dismiss-alert"><span class="icon-cross"></span></a>',
         '<%= error %>',
       '</p>'
+      ].join('')),
+    shareFbTemplate = _.template([
+      'http://www.facebook.com/sharer/sharer.php?s=100&p[url]=<%= url %>&p[images][0]=&p[title]=<%= title %>&p[summary]='
+      ].join('')),
+    shareTwTemplate = _.template([
+      'http://twitter.com/home?status=<%= title %>:%20<%= url %>%20on%20@thebbbench'
       ].join(''));
   bbbench.uid = userId;
   bbbench.dribbbleId = dribbbleId;
@@ -415,6 +421,7 @@
       i,
       alreadyFetched,
       benchbars = document.getElementsByClassName('benchbar'),
+      togglebars = document.getElementsByClassName('togglebar'),
       widebars = document.getElementsByClassName('widebar'),
       bgArray = ['bbbuildingsbbblur', 'bbbrickbbblur', 'bbboardsbbblur'],
       randBg = bgArray[Math.round(Math.random() * (bgArray.length - 1))];
@@ -424,6 +431,9 @@
     for (i = widebars.length - 1; i >= 0; i--) {
       widebars[i].style.display = 'inline-block';
       widebars[i].style.backgroundImage = "url('/images/" + randBg + ".jpg')";
+    }
+    for (i = togglebars.length - 1; i >= 0; i--) {
+      togglebars[i].style.display = 'none';
     }
     if(workList.dataset.benchId){
       if (!bbbench.gettingLatestBench) {
@@ -456,6 +466,11 @@
     for (i = 0; i < daBench.players.length; i++) {
       elemId = 'latest-' + i.toString();
       setTimeout(_.asyncRequest, i * 1100, playerShotsUrl(daBench.players[i].dribbbleId) + addendum, elemId, handleBenchLatest);
+    }
+    if (bbbench.gettingLatestBench.count === 0) {
+      bbbench.gettingLatestBench = null;
+      benchLoad.style.width = '100%';
+      benchLoad.style.height = '0px';
     }
   }
   function handleBenchLatest(id, data) {
@@ -579,12 +594,19 @@
     evt.preventDefault();
     var benchbars = document.getElementsByClassName('benchbar'),
       widebars = document.getElementsByClassName('widebar'),
+      togglebars = document.getElementsByClassName('togglebar'),
       i;
     for (i = benchbars.length - 1; i >= 0; i--) {
       benchbars[i].style.display = 'inline-block';
     }
+    if(window.innerWidth < 749) {
+      benchbars[1].style.display = 'none';
+    }
     for (i = widebars.length - 1; i >= 0; i--) {
       widebars[i].style.display = 'none';
+    }
+    for (i = togglebars.length - 1; i >= 0; i--) {
+      togglebars[i].style.display = '';
     }
     if (!bbbench.loadedFollowing) {
       _.asyncRequest(playerFollowingUrl(dribbbleId) + addendum, dribbbleId, handlePlayerFollowing);
@@ -594,12 +616,16 @@
     evt.preventDefault();
     var benchbars = document.getElementsByClassName('benchbar'),
       widebars = document.getElementsByClassName('widebar'),
+      togglebars = document.getElementsByClassName('togglebar'),
       i;
     for (i = benchbars.length - 1; i >= 0; i--) {
       benchbars[i].style.display = 'none';
     }
     for (i = widebars.length - 1; i >= 0; i--) {
       widebars[i].style.display = 'inline-block';
+    }
+    for (i = togglebars.length - 1; i >= 0; i--) {
+      togglebars[i].style.display = 'none';
     }
   }
   function readyWorkBench (evt) {
@@ -612,6 +638,7 @@
       latestHeading = document.getElementsByClassName('latest-heading')[0],
       latestDesc = document.getElementsByClassName('latest-desc')[0],
       workActions = workBench.getElementsByClassName('work-actions')[0],
+      shareLatest = document.getElementsByClassName('share-latest')[0],
       benchLinks = document.getElementsByClassName('bench-link'),
       list = workBench.getElementsByClassName('work-list')[0],
       latestGrid = document.getElementById('latest-grid'),
@@ -631,6 +658,15 @@
     workActions.style.display = 'block';
     workActions.children[0].href = '/bench/' + daBench._id;
     workActions.children[1].href = '/bench/' + daBench._id + '/edit';
+    shareLatest.children[0].href = '/bench/' + daBench._id;
+    shareLatest.children[1].href = shareTwTemplate({
+      url: 'http://' + location.hostname + '/bench/' + daBench._id,
+      title: daBench.title
+    });
+    shareLatest.children[2].href = shareFbTemplate({
+      url: 'http://' + location.hostname + '/bench/' + daBench._id,
+      title: daBench.title
+    });
     list.innerHTML = null;
     for (i = daBench.players.length - 1; i >= 0; i--) {
       elemId = 'working-' + i.toString();
